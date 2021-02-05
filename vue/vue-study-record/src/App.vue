@@ -31,15 +31,20 @@
       <h3>v-model实现</h3>
       <vmodel-native></vmodel-native>
     </div>
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    
+    <div>
+      <h3>用户输入超过5秒再更新dom</h3>
+      firstName:<input type="text" v-model="firstName">
+      lastName:<input type="text" v-model="lastName">
+      fullName:{{fullName}}
     </div>
-    <router-view/> -->
+
+    <flash-sale :date-val="dateVal"></flash-sale>
   </div>
 </template>
 
 <script>
+import FlashSale from './components/flashSale.vue'
 import TodoList from './components/todoList.vue'
 import VmodelNative from "./components/vmodelNative"
 
@@ -49,12 +54,21 @@ export default {
       inputTest:"",
       name1:"yinghan1",
       inputTest2:"",
-      list:["1"]
+      list:["1"],
+      firstName:"",
+      lastName:"",
+      dateVal:new Date("2021-2-5 18:25:00")
+    }
+  },
+  computed:{
+    fullName:function(){
+      return this.firstName + this.lastName
     }
   },
   components:{
     TodoList,
-    VmodelNative
+    VmodelNative,
+    FlashSale
   },
   methods: {
     addList(e){
