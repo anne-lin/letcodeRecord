@@ -40,10 +40,14 @@
     </div>
 
     <flash-sale :date-val="dateVal"></flash-sale>
+
+    内置指令
+    <customer-directives></customer-directives>
   </div>
 </template>
 
 <script>
+import CustomerDirectives from '../../../../geektime-vue-1/演示DEMO源码/src/views/1.7/CustomerDirectives.vue'
 import FlashSale from './components/flashSale.vue'
 import TodoList from './components/todoList.vue'
 import VmodelNative from "./components/vmodelNative"
@@ -68,7 +72,8 @@ export default {
   components:{
     TodoList,
     VmodelNative,
-    FlashSale
+    FlashSale,
+    CustomerDirectives
   },
   methods: {
     addList(e){
