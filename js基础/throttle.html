@@ -1,0 +1,34 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+</head>
+<body>
+<div></div>
+</body>
+<script>
+//在一段时间内只能执行一次动作，减少事件执行的频率。如：执行一次动作A，三面内有触发一次，则不执行，三秒后触发一次，执行
+    function sayName(name){
+        console.log(name);
+    }
+    function throttle(fn,time){
+        let preTime=null,
+        setTime=null;
+        return function(){
+            let that=this,
+            arg=arguments,
+            now = new Date();
+            if(now - time - preTime > 0){
+                setTimeout(function(){
+                    fn.apply(that,arg);
+                },time);
+                preTime = now;
+            }
+        }
+    }
+    let throttles=throttle(sayName,3000);
+    throttles("hello");
+
+</script>
+</html>
