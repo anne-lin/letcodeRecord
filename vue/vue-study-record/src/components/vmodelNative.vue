@@ -3,6 +3,7 @@
     <vmodel-input v-model="phoneInfo" :zip-code.sync="zipCode"></vmodel-input>
 
     <p>v-model native</p>
+    
     <vmodel-input 
     :phone-Info="phoneInfo"
     @change="val=>(phoneInfo=val)"    

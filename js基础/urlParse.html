@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>url parse</title>
+</head>
+<body>
+   <script>
+       let url = new URL("https://www.baidu.com/www/?a=18&b=19");
+//url:
+// hash: ""
+// host: "www.baidu.com"
+// hostname: "www.baidu.com"
+// href: "https://www.baidu.com/?a=18&b=19"
+// origin: "https://www.baidu.com"
+// password: ""
+// pathname: "/"
+// port: ""
+// protocol: "https:"
+// search: "?a=18&b=19"
+// searchParams: URLSearchParams {}
+// username: ""
+
+//解析参数
+console.log(getUrlQueyr(url.search));
+
+function getUrlQueyr(search) {
+    const searchObj = {};
+    for (let [key, value] of new URLSearchParams(search)) {
+        searchObj[key] = value;
+    }
+    return searchObj;
+}
+   </script> 
+</body>
+</html>

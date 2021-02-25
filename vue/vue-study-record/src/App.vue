@@ -43,14 +43,27 @@
 
     内置指令
     <customer-directives></customer-directives>
+
+    <p>组件间的数据传递：provide和inject</p>
+    <children-a></children-a>
+
+    <p>数据校验</p>
+    <validate 
+      :phonNnumber="phonNnumber"
+      :validateFun="validateFun"
+      message="手机号填写错误"
+    />
+    <span></span>
   </div>
 </template>
 
 <script>
-import CustomerDirectives from '../../../../geektime-vue-1/演示DEMO源码/src/views/1.7/CustomerDirectives.vue'
+import CustomerDirectives from './components/CustomerDirectives.vue'
 import FlashSale from './components/flashSale.vue'
 import TodoList from './components/todoList.vue'
 import VmodelNative from "./components/vmodelNative"
+import childrenA from "./components/provideGroup/childrenA"
+import Validate from './components/validate.vue'
 
 export default {
   data(){
@@ -61,7 +74,8 @@ export default {
       list:["1"],
       firstName:"",
       lastName:"",
-      dateVal:new Date("2021-2-5 18:25:00")
+      dateVal:new Date("2021-2-5 18:25:00"),
+      phonNnumber:""
     }
   },
   computed:{
@@ -73,9 +87,15 @@ export default {
     TodoList,
     VmodelNative,
     FlashSale,
-    CustomerDirectives
+    CustomerDirectives,
+    childrenA,
+    Validate
   },
+  
   methods: {
+    validateFun(val){
+      return val.length == 11
+    },
     addList(e){
       this.list.push(e.target.value)
     },
