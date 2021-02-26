@@ -17,15 +17,3 @@ Function.prototype.bindNative=function(){
     }
 }
 obj.sayName.bindNative(obj2)(18);
-
-
-function bindThis(f, oTarget) {
-    return function(){
-      return f.apply(oTarget,arguments)
-    }
-}
-
-    var r = bindThis(function(a, b){
-        return this.test + a + b
-    }, {test: 2})(2, 3); 
-console.log(r);

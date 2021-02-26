@@ -10,15 +10,49 @@
                errorMessage="校验错误"
             ></vmodel-input>
         </li>
+        <li>
+            作业2：防抖<br>
+            first name:<input type="text" v-model="firstName"><br>
+            last name:<input type="text" v-model="lastName"><br>
+            fullName:{{fullName}}
+        </li>
+        <li>
+            作业3：秒杀倒计时
+            <flash-sale
+                :startTime="startTime"
+                :endTime="endTime"
+            ></flash-sale>
+        </li>
     </ul>
 </div>
 </template>
 <script>
 import VmodelInput from "../components/vmodelInput"
+import flashSale from "../components/flashSale"
+import moment from "moment"
+
 export default {
     data() {
         return {
-            phoneInfo:""
+            phoneInfo:"",
+            firstName:"",
+            lastName:"",
+            fullName:"",
+            startTime:moment("2021-02-25 16:25"),
+            endTime:moment("2021-02-25 16:35")
+        }
+    },
+   /*  computed:{
+        fullName:function(){
+            return this.firstName+this.lastName
+        }
+    }, */
+    watch:{
+        firstName:function(val){
+            clearInterval(this.firstTime);
+            this.firstTime = setTimeout(()=>{
+                this.fullName = val + this.lastName
+            },500)
         }
     },
     methods: {
@@ -27,7 +61,8 @@ export default {
         }
     },
      components:{
-        VmodelInput
+        VmodelInput,
+        flashSale
     }
 }
 </script>
