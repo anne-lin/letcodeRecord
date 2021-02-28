@@ -1,0 +1,33 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+</head>
+<body>
+<div>
+    <input type="text" id="input">
+</div>
+</body>
+<script>
+//当调用动作n毫秒后，才会执行该动作，若在这n毫秒内又调用此动作则将重新计算执行时间
+function debounce(fn,time){
+    let setTime=null;    
+    return function(){
+        let that=this,
+        arg=arguments;
+        if(setTime){
+            clearTimeout(setTime);
+            setTime=null;
+        }
+        setTime = setTimeout(function(){
+            fn.apply(that,arg);
+        },time);
+    }    
+}
+document.getElementById("input").addEventListener("input",debounce(function(e){
+    console.log(this.value);
+},3000))
+
+</script>
+</html>
