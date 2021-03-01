@@ -47,6 +47,13 @@
     使用proxy控制数据是否更改
     <input type="text" v-model="proxyData.name">
     <input type="checkbox" v-model="changeData">
+
+    <br>
+    vuex 
+    <div>{{$store.state.count}}
+      <button @click="$store.commit('increamemt')">count++</button>
+      <button @click="$store.commit('increamemt',2)">count+2</button>
+    </div>
   </div>
 </template>
 
