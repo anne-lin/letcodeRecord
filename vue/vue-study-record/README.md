@@ -1,5 +1,7 @@
 # vue-study-record
 
+### 此项目用于记录极客时间-vue实战中的学习内容
+
 ## Project setup
 ```
 npm install
