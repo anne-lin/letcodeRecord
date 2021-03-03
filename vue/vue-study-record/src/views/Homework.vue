@@ -17,11 +17,7 @@
             fullName:{{fullName}}
         </li>
         <li>
-            作业3：秒杀倒计时
-            <flash-sale
-                :startTime="startTime"
-                :endTime="endTime"
-            ></flash-sale>
+            <router-link to="shopping">购物车</router-link>
         </li>
     </ul>
 </div>

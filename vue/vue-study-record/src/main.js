@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-//import Store from './min-vuex';
+import Store from './min-vuex';
 
 Vue.config.productionTip = false;
 
@@ -34,10 +34,10 @@ const store=new Store({
   }
 })
 
-//Vue.prototype.$store =store;
+Vue.prototype.$store =store;
 
 new Vue({
   router,
-  store,
+  //store,
   render: h => h(App)
 }).$mount('#app')

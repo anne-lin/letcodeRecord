@@ -1,0 +1,30 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+</head>
+<body>
+<div></div>
+</body>
+<script>
+    window.name="haha";
+    function A(){        
+        this.name = "enen";
+        setTimeout(()=>{
+            console.log("箭头函数：",this.name);
+        },100)
+        setTimeout(function(){
+            console.log("匿名函数：",this.name);
+        },100);
+        function test(){
+            console.log("普通函数：",this.name);
+        }
+        setTimeout(test,100);
+    }
+    A.apply({
+        name:"test"
+    })
+    console.log(window.name)
+</script>
+</html>

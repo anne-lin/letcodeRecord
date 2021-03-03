@@ -14,7 +14,6 @@ const first = () => (new Promise((resolve, reject) => {
     });
 
 }));
-
 first().then((arg) => {
     console.log(arg);
 });

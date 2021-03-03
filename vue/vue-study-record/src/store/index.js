@@ -1,11 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import cart from "./modules/cart.js"
+import products from "./modules/products.js"
+
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    count:0
+    count:0,
+    username:"xxxxxxxx@qq.com"
+  },
+  modules:{
+    cart,
+    products
   },
   mutations: {
     increamemt(state,n){

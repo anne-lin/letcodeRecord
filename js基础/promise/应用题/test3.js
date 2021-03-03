@@ -31,7 +31,29 @@ const mergePromise = ajaxArray => {
     });
     return sequence;
 };
-
+const mergePromise1 =(ajaxArray)=>{
+    return new Promise(async (resolve,reject)=>{
+        let length = ajaxArray.length;
+        let valueArr=[];
+        for(let i=0;i<length;i++){            
+            valueArr.push(await ajaxArray[i]());
+        }
+        resolve(valueArr);
+    })
+} 
+const mergePromise2 =(ajaxArray)=>{
+    return (async function(){
+        let length = ajaxArray.length;
+        let valueArr=[];
+        let i=0;
+        while(i < length){
+            let value = await ajaxArray[i]();
+            valueArr.push(value);
+            i++;
+        }
+        return valueArr;
+    })()
+}
 mergePromise([ajax1, ajax2, ajax3]).then(data => {
     console.log('done');
     console.log(data); // data 为 [1, 2, 3]
