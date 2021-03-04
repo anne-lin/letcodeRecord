@@ -17,6 +17,7 @@
  * @param {TreeNode} root
  * @return {boolean}
  */
+//未实现
 var isBalanced = function(root) {
     if(!root){
         return [];
@@ -25,16 +26,10 @@ var isBalanced = function(root) {
         rightDeep = root.right ? 1:0,
         rootLeft=root.left,
         rootRight=root.right;
-    while(rootLeft && rootRight || Math.abs(leftDeep - rightDeep) < 2){
-        if(rootLeft){
-            rootLeft=rootLeft.left;
-            leftDeep++;
-        }
-        if(rootRight){
-            rootRight=rootRight.right;
-            rootRight++;
-        }
-    }
+        while(rootLeft && leftDeep++) rootLeft=rootLeft.left;
+        while(rootRight && rightDeep++) rootRight=rootRight.right;
+    return Math.abs(leftDeep - rightDeep) < 2;
+   
 };
 // @lc code=end
 
