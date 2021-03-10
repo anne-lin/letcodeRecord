@@ -19,7 +19,7 @@
  */
 //未实现
 var isBalanced = function(root) {
-    if(!root){
+    if(!root){ 
         return [];
     }
     let leftDeep=root.left ? 1:0,
@@ -28,8 +28,7 @@ var isBalanced = function(root) {
         rootRight=root.right;
         while(rootLeft && leftDeep++) rootLeft=rootLeft.left;
         while(rootRight && rightDeep++) rootRight=rootRight.right;
-    return Math.abs(leftDeep - rightDeep) < 2;
-   
+    return Math.abs(leftDeep - rightDeep) < 2;    
 };
 // @lc code=end
 
