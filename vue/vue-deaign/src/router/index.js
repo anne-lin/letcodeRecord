@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import NotFound from "../views/NotFound"
 
 Vue.use(VueRouter);
 
@@ -39,17 +40,25 @@ const routes = [
           },{
             path: "/form/step-form",
             name: "stepform",
-            //component: () =>import(/* webpackChunkName: "dashboard" */ "../views/Forms/StepForm"),
-            component:{
+            component: () =>import(/* webpackChunkName: "dashboard" */ "../views/Forms/StepForm"),
+            /* component:{
               render:(h)=>h("router-view")
-            },
+            }, */
             children:[ {
               path:"/form/step-form",
               redirect:"/form/step-form/info"
             },{
               path: "/form/step-form/info",
               name: "info",
-              component: () =>import(/* webpackChunkName: "Forms" */ "../views/Forms/StepForm/StepInfo.vue"),
+              component: () =>import(/* webpackChunkName: "Forms" */ "../views/Forms/StepForm/Step1"),
+            },{
+              path: "/form/step-form/confirm",
+              name: "confirm",
+              component: () =>import(/* webpackChunkName: "Forms" */ "../views/Forms/StepForm/Step2"),
+            },{
+              path: "/form/step-form/result",
+              name: "result",
+              component: () =>import(/* webpackChunkName: "Forms" */ "../views/Forms/StepForm/Step3"),
             },]
           }
         ]
@@ -79,13 +88,24 @@ const routes = [
         component: () =>import(/* webpackChunkName: "user" */ "../views/User/Register.vue"),
       }
     ]
+  },{
+    path:"*",
+    name:"404",
+    component:NotFound
   }
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
+router.breforeEach((to,from,next)=>{
+    //NProgress.start();
+    next();
+})
+router.afterEach((to,from,next)=>{
+  //NProgress.done();
+})
 
 export default router;
