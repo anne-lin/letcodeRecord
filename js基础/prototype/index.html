@@ -1,0 +1,24 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+<title>原型</title>
+</head>
+<body>
+<div></div>
+</body>
+<script>
+    function M(name){
+        this.name=name;
+    }
+    M.prototype.ages={
+        age:18
+    };
+    let obj=new M("haha");
+    obj.ages.age=19;
+    let obj2=new M("enen");
+    console.log(obj2.ages.age);
+    console.log(obj.__proto__ == M.prototype)
+</script>
+</html>

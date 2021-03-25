@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册自定义事件</title>
+</head>
+<body>
+    
+</body>
+<script>
+    //CustomEvent注册的事件可携带参数
+    const event = new CustomEvent("test",{
+        detail:{name:"haha"}
+    });
+    window.addEventListener("test",function(obj){
+        console.log("enen");
+        console.log(obj.detail.name);
+    });
+    setTimeout(function(){
+        window.dispatchEvent(event);
+    },1000);
+    //不可携带参数
+    const event2 = new Event("test2");
+    window.addEventListener("test2",function(){
+        console.log(arguments);
+    });
+    setTimeout(function(){
+        window.dispatchEvent(event2);
+    },1000);
+</script>
+</html>

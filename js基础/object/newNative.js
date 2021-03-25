@@ -15,6 +15,13 @@ function newNative(){
     fn.apply(tmpObj,arguments);
     return tmpObj;
 }
-let personA = newNative(person,"haha",18);
-console.log(personA);
+function newNative2(){
+    let fn=Array.prototype.shift.apply(arguments);
+    let tmpObj=Object.create(fn.prototype);
+    fn.apply(tmpObj,arguments);
+    return tmpObj;
+}
+let personA = newNative2(person,"haha",18);
+console.log(personA.__proto__.constructor);
+console.log(personA instanceof person);
 personA.sayName();

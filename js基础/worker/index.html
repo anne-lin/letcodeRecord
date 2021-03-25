@@ -1,0 +1,102 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+<title>worker线程的使用</title>
+</head>
+<body>
+<div></div>
+</body>
+<script>
+    //将setInterval,setTimeout方法放到worker线程中工作
+    let worker = new Worker("./worker.js"),
+        lastFakeId = 1,
+        maxFakeId = 0x7FFFFFFF,
+        fakeIdToCallback = {};
+
+    function getFakeId(){
+        while(fakeIdToCallback.hasOwnProperty(lastFakeId)){
+            if(lastFakeId == maxFakeId){
+                lastFakeId = 0;
+            }else{
+                lastFakeId ++;
+            }
+        }
+        return lastFakeId;
+    }
+
+    window.setInterval = function(callback,time){
+        let fakeId = getFakeId();
+        fakeIdToCallback[fakeId] = {
+            callback:callback
+        }
+        worker.postMessage({
+            name:"setInterval",
+            fakeId,
+            time
+        });
+        return fakeId;
+    }
+    window.clearInterval = function(fakeId){
+        if(fakeIdToCallback.hasOwnProperty(fakeId)){
+            worker.postMessage({
+                name:"clearInterval",
+                fakeId
+            });
+            delete fakeIdToCallback[fakeId];
+        }
+    }
+    window.setTimeout = function(callback,time){
+        let fakeId = getFakeId();
+        fakeIdToCallback[fakeId] = {
+            callback:callback,
+            isTimeout:true
+        }
+        worker.postMessage({
+            name:"setTimeout",
+            fakeId,
+            time
+        });
+        return fakeId;
+    }
+    window.clearTimeout = function (fakeId) {
+        if (fakeIdToCallback.hasOwnProperty(fakeId)) {
+            delete fakeIdToCallback[fakeId];
+            worker.postMessage ({
+                name: 'clearTimeout',
+                fakeId: fakeId
+            });
+        }
+    };
+    worker.onmessage = function(event){
+        let {fakeId} = event.data;
+        if (fakeIdToCallback.hasOwnProperty(fakeId)) {
+            request = fakeIdToCallback[fakeId];
+            callback = request.callback;
+            parameters = request.parameters;
+            if (request.hasOwnProperty ('isTimeout') && request.isTimeout) {
+                delete fakeIdToCallback[fakeId];
+            }
+        }
+        if (typeof (callback) === 'string') {
+            try {
+                callback = new Function (callback);
+            } catch (error) {
+                console.log (logPrefix + 'Error parsing callback code string: ', error);
+            }
+        }
+        if (typeof (callback) === 'function') {
+            callback.apply (window, parameters);
+        }
+    }
+    worker.onerror = function (event) {
+        console.log (event);
+    };
+
+
+    setTimeout(function(){
+        console.log("haha");
+    },1000)
+</script>
+</html>
