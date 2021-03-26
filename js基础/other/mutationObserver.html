@@ -11,7 +11,7 @@
     
       var observer = new MutationObserver(function(mutations) {
           console.log("mutations:",mutations)
-        mutations.forEach(function(mutation) {
+          mutations.forEach(function(mutation) {
           console.log('mutation.type = ' + mutation.type);
           for (var i = 0; i < mutation.addedNodes.length; i++) {
             console.log('  "' + mutation.addedNodes[i].textContent + '" added');
