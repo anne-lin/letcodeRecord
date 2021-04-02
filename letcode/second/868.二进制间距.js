@@ -11,9 +11,14 @@
  */
 var binaryGap = function(n) {
     let count = 0,
-        n = n & 1;
+        flag = n & 1,
+        max=0;
     while(n >> 1){
-        
+        if(flag == 1){
+            count++;
+        }else{
+            count--;
+        }
     }
 };
 // @lc code=end
