@@ -1,20 +1,50 @@
 const path = require('path');
 
 module.exports = {
+  mode:"production",
+  //单入口
   entry: './src/index.js',
   output: {    
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
+    library:"Test1",
+    libraryTarget:"umd",
+    libraryExport:"default"
   },
-  performance: {
-    hints:'warning',
-    //入口起点的最大体积 整数类型（以字节为单位）
-    maxEntrypointSize: 50000000,
-    //生成文件的最大体积 整数类型（以字节为单位 300k）
-    maxAssetSize: 30000000,
-    //只给出 js 文件的性能提示
-    assetFilter: function(assetFilename) {
-      return assetFilename.endsWith('.js');
-    }
-  }
+  //多入口 
+  /* entry:{
+    "app":"./src/index.js",
+    "other":"./src/test.js"
+  },
+  output:{
+    path:path.resolve(__dirname, 'dist'),
+    filename:"[name].min.js"
+  } */
+  module:{
+    rules:[{
+      test:/\.js$/,
+      use:"babel-loader"
+    },{
+      test:/\.css$/,
+      use:["style-loader","css-loader"]
+    },{
+      test:/\.less$/,
+      use:["style-loader","css-loader","less-loader"] 
+    }/* ,{
+      test:/\.(png|svg|jpg|gif|jpeg)$/,
+      use:["file-loader"]
+    } */
+    ,{
+      test:/\.(png|svg|jpg|gif|jpeg)$/,
+      use:[{
+        loader:"url-loader",
+        options:{
+          //如果图片的大小小于10k,则自动转为base64的编码
+          limit:10240
+        }
+      }]     
+    } 
+  ]
+  },
+
 };
