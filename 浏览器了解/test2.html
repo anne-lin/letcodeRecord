@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<body>
+    <p>我是从A页面打开的</p>
+    <a href="test3.html">C页面</a>
+    <button id="changA">changA</button>
+    <script>
+        document.getElementById("changA").click=function(){
+            window.opener.location.href="https://www.baidu.com"
+        }
+    </script>
+</body>
+</html>
