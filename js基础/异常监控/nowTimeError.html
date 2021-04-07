@@ -1,0 +1,39 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+<title>即时运行错误的捕获</title>
+<script src="http://haha.com/dsaddsa"></script>
+</head>
+<body>
+<div>
+    <img src="http://haha.com/dsaddsa" alt="">
+</div>
+</body>
+<script>
+    try{
+        for(let i=0;i<l;i++){
+            console.log(i);
+        }
+    }catch(e){
+        console.log("catch:",e);
+    }
+    
+    window.onerror=function(message, source, lineno, colno, error){
+        console.log("haha:",message, source, lineno, colno, error);
+        return false
+    }
+    window.addEventListener("error",function(e){
+        console.log("捕获：",e)
+    },true)
+
+    function test(){
+        for(let i=0;i<l;i++){
+            console.log(i);
+        }
+    }
+    
+    test();
+</script>
+</html>

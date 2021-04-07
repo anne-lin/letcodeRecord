@@ -1,0 +1,134 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+<meta name="description" content="页面布局：div高度已知，三栏布局，左右各300px">
+<title>页面布局</title>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body{
+        width: 100%;
+    }
+    section{
+        margin-top: 20px;
+    }
+    article>div{
+        border: 1px solid black;
+        height: 100px;
+    }
+    
+    /* 方案一 */
+   /*  #box{
+        display: flex;
+    }
+    .box2{         
+         flex-grow: 1;
+        width: calc(100% - 600px)
+    } */
+
+    /* 方案二 */
+    /* #box{
+        display: table;
+    }
+    #box>div{
+        display: inline-block;
+    }
+    .box2{         
+        width: calc(100% - 600px)
+    } */
+
+    /* 方案三 */
+   /*  #box>div{
+        float: left;
+    } 
+    .box2{
+        width: calc(100% - 600px)
+    } */ 
+
+    /* 方案四 */
+    /* #box{
+        position: relative;
+    }
+    #box>div{
+        position: absolute;
+    }
+    .box1:first-of-type{
+        left: 0;
+    }
+    .box1:last-of-type{
+        right:0;
+    }
+    .box2{
+        left: 300px;
+        width: calc(100% - 600px)
+    } */
+
+    /* 方案五：grid */
+    /* #box{
+        display: grid;
+        grid-template-columns:300px auto 300px;
+    } */
+
+    /* 方案六：table */
+    #box{
+        display: table;
+        width: 100%;
+    }
+    #box div{
+        display: table-cell;
+        border: 1px solid black;
+    }
+    #box .left,
+    #box .right{
+        width: 300px;
+    }
+</style>
+</head>
+<body>
+    <section class="layout flex">
+        <style>
+            .layout.flex article{
+                display: flex;
+            }
+            .layout.flex .left,
+            .layout.flex .right{
+                width: 300px;
+            }
+            .layout.flex .center{
+                flex-grow: 1;
+            }
+        </style>
+        <article>
+            <div class="left">左边</div>
+            <div class="center">中间</div>
+            <div class="right">右边</div>
+        </article>
+    </section>
+
+    <section class="layout grid">
+        <style>
+            .layout.grid article{
+                display: grid;
+                grid-template-columns:300px auto 300px;
+            }
+        </style>
+        <article>
+            <div class="left">左边</div>
+            <div class="center">中间</div>
+            <div class="right">右边</div>
+        </article>
+    </section>
+
+    <section id="box">
+        <div class="left">左边</div>
+        <div class="center">中间</div>
+        <div class="right">右边</div>
+    </section>
+</body>
+<script></script>
+</html>

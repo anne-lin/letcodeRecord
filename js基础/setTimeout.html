@@ -1,0 +1,32 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+</head>
+<body>
+<div></div>
+</body>
+<script>
+    function bar() {
+        console.log('bar')
+        //setTimeout(bar,0);
+    }
+function foo() {
+    setTimeout(bar,  2147483648);
+    /* for (let i = 0; i < 5000; i++) {
+        i = 5+8+8+8+i;
+        console.log(i)
+    } */
+}
+//foo()
+
+let obj ={
+    name:"haha",
+    sayName:()=>{
+        console.log(this.name);
+    }
+}
+console.log(obj.sayName())
+</script>
+</html>

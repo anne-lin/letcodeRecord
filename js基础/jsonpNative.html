@@ -1,0 +1,43 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+<title>jsonp原理</title>
+</head>
+<body>
+<div></div>
+</body>
+<script>
+    let jsonp = function(url,onsuccess,onerror,charset){
+        //返回的资源中会触发callBackName方法，并将数据传递到此方法中
+        var callBackName = function(){
+            if(onsuccess){
+                onsuccess(arguments)
+            }
+        }
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.async = true;
+        script.src = url + "&callback="+callBackName;
+        script.onload = script.onreadystatechange = function() {
+            if (!this.readyState || /complete|loaded/.test(this.readyState)) {
+                script.onload = null;
+                script.onreadystatechange = null;
+                //移除script节点
+                if(script.parentNode){
+                    script.parentNode.removeChild(script);
+                }
+                //删除绑定函数
+                callBackName=null;
+            }
+        };
+        script.onerror = function(){
+            if (typeof callback === "function") {
+                callBackName("error");
+            }
+        };
+        (document.head || document.getElementsByTagName("head")[0]).appendChild(script);
+    }
+</script>
+</html>

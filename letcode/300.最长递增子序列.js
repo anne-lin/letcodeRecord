@@ -10,19 +10,19 @@
  * @return {number}
  */
 //方法一：动态规划
-// var lengthOfLIS = function(nums) {
-//     let dp=[1],max=1;
-//     for (let i = 1; i < nums.length; i++){
-//         dp[i] = 1;
-//         for (let j = 0; j < i; j++){
-//             if (nums[j] < nums[i]) {
-//                 dp[i] = Math.max(dp[j] + 1, dp[i]);
-//             }
-//         }
-//         max = Math.max(max, dp[i]);
-//     }
-//     return max;
-// };
+var lengthOfLIS = function(nums) {
+    let dp=[1],max=1;
+    for (let i = 1; i < nums.length; i++){
+        dp[i] = 1;
+        for (let j = 0; j < i; j++){
+            if (nums[j] < nums[i]) {
+                dp[i] = Math.max(dp[j] + 1, dp[i]);
+            }
+        }
+        max = Math.max(max, dp[i]);
+    }
+    return max;
+};
 
 //方法二：二分法
 var lengthOfLIS = function (nums) {
