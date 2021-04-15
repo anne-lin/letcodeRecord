@@ -1,7 +1,8 @@
 const path = require('path');
+const htmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  mode:"production",
+  mode:"development",
   //单入口
   entry: './src/index.js',
   output: {    
@@ -45,5 +46,14 @@ module.exports = {
       }]     
     } 
   ]},
-
+  devServer: {
+    hot:true,
+    contentBase: path.join(__dirname, 'dist')
+  },
+  plugins:[
+    new htmlWebpackPlugin({
+      template:"./index.html",
+      filename:"index.html"
+    }),
+  ] 
 };

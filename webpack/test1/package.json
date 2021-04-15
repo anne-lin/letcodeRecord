@@ -4,19 +4,27 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "dev": "webpack-dev-server --open --mode development --hot",
-    "build": "webpack --config webpack.config.js"
+    "dev": "webpack-dev-server --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js",
+    "multipage": "webpack --config webpack.multipage.js"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "optimize-css-assets-webpack-plugin": "5.0.4",
+    "postcss-loader": "3.0.0",
+    "autoprefixer": "9.5.1"
+  },
   "devDependencies": {
     "@babel/core": "7.13.14",
     "@babel/preset-env": "7.13.8",
     "babel-loader": "8.2.2",
+    "clean-webpack-plugin": "2.0.2",
     "css-loader": "5.2.0",
+    "cssnano": "^5.0.0",
     "file-loader": "6.2.0",
-    "html-webpack-plugin": "^5.3.1",
+    "glob": "^7.1.6",
+    "html-webpack-plugin": "3.2.0",
     "less": "^4.1.1",
     "less-loader": "^8.0.0",
     "style-loader": "2.0.0",
