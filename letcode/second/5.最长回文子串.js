@@ -15,6 +15,8 @@ var longestPalindrome = function(s) {
     let length=dp[i-1].length;
     if(length < i && s[i-length-1]==s[i]){
       dp[i]=s[i]+dp[i-1]+s[i];
+    }else if(Array.from(dp[i-1]).every(item=>item==s[i])){
+      dp[i]=dp[i-1]+s[i];
     }else if(s[i-1] == s[i]){
       dp[i]=s[i]+s[i];
     }else{
