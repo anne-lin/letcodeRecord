@@ -1,5 +1,6 @@
 import getCart from "./cart";
 import StateMachine from "javascript-state-machine";
+import { log } from '../util/log'
 
 class Item{
   constructor(list,data){
@@ -60,9 +61,11 @@ class Item{
   render() {
     this.list.el.append(this.el);
   }
+  @log("add")
   addToCart(){
     this.cart.add(this.data);
   }
+  @log("del")
   delToCart(){
     this.cart.del(this.data.id);
   }

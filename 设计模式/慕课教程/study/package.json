@@ -24,6 +24,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "core-decorators": "^0.20.0",
     "jquery": "^3.6.0"
   }
 }
