@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://open.ccod.com:4445/wassl/WA.js"></script>
+    <script>
+        WA.init({
+//        ui: false,
+        useLocal: false,
+        telVisible: true, //默认为false
+        //isShowIntelSelect: false,
+//        advanceControlVisible:false,
+//        sipUseCphone: false,//sip分机时使用Cphone登录：true,不使用：false
+        callback: function() {
+            WA.attachModule("theme/cchat.js", function() {
+                WA.cchat.toggle();
+            })
+
+                // WA.extend.login({
+            //     "entId":"0103290014",
+            //     "agentId":"7432",
+            //     "agentPassword": "000000",
+            //     "agentNumber": "tel:18310508063",
+            //     "isForce":true
+            // });
+                //监听操作是否成功
+                WA.registerEventHandler(function (data) {
+                    console.log("监听操作:",data);
+                    if(data.type == "EVENT_TP_DISCONNECT"){
+                        console.log("[demo]-坐席挂断")
+                    }
+                    if(data.type == "EVENT_OP_DISCONNECT"){
+                        console.log("[demo]-客户挂断")
+                    }
+                    if (data.type == 'EVENT_WEBAGENT_LOGIN') {
+                        console.log('[demo]-登录成功');
+                    }
+                    if (data.type == 'EVENT_WEBAGENT_LOGIN_FAIL') {
+                        console.log('[demo]-登录失败' + JSON.stringify(data));
+                    }
+                    if (data.type == 'EVENT_WEBAGENT_LOGOUT') {
+//                    hasLogout = true;
+                        var forceLogout = data.ext && data.ext.forceLogout == '1';
+                        console.log('[demo]-登出成功 - ' + (forceLogout ? "异常登出" : "正常登出"));
+                    }
+                    if (data.type == 'EVENT_WEBAGENT_LOGOUT_FAIL') {
+                        console.log('[demo]-登出失败');
+                    }
+                });
+
+                //监听自动登录是否成功
+                WA.registerResultHandler(function (data) {
+                    if (data.type == "autoLogin") {
+                        if (data.code != 0) {
+                            console.log('[demo]-自动登录失败');
+//                        if(!hasLogout) {
+                            //集成没有登录按钮的场景，在这里(自动登录失败并且没有登出)调用登录接口，打开页面直接登录
+//                            WA.extend.login({
+//                                entId : "8989",
+//                                agentId : "081702",
+//                                agentPassword : "000000",
+//                                agentNumber : "tel:913651330225",
+////                                agentNumber : "",
+//                                isForce: true
+//                            });
+//                        }
+                        } else {
+                            console.log('[demo]-自动登录成功');
+                        }
+                    }
+                });
+    }});
+    </script>
+</body>
+</html>

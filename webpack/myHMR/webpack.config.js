@@ -11,7 +11,8 @@ module.exports = {
   },
   devServer: {
     hot:true,
-    contentBase: path.join(__dirname, 'dist')
+    contentBase: path.join(__dirname, 'dist'),
+    //https:true
   },
   plugins:[
     new htmlWebpackPlugin({
