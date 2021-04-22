@@ -1,13 +1,22 @@
-/**
- * 迭代器模式
- */
-let arr=[1,2,3];
-let iterator=arr[Symbol.iterator]();
-console.log(iterator);
-console.log(iterator.next());
-//value值，done判断数组是否结束
-/* {
-  "value": 2,
-  "done": false
-} */
-console.log(iterator.next());//
+import List from "./demo/list";
+import shoppCart from "./demo/shoppingCart"
+
+class App{
+  constructor(el){
+    this.el = $("#"+el);
+  }
+  init(){
+    this.initShoppingCart();
+    this.initList();
+  }
+  initShoppingCart(){
+    let shoppingCart = new shoppCart(app);
+    shoppingCart.init();
+  }
+  initList(){
+    let list = new List(app);
+    list.init();
+  }
+}
+
+export default App;

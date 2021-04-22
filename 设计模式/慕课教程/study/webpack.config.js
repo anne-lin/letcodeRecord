@@ -7,7 +7,10 @@ module.exports = {
   entry:"./src/index.js",
   output:{
     path: path.resolve(__dirname, './dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    library: "App",
+    libraryTarget:"umd",
+    libraryExport:"default"
   },
   module:{
     rules:[{
@@ -17,13 +20,14 @@ module.exports = {
     }
   ]},
   devServer: {
-    hot:true,
-    contentBase: path.join(__dirname, 'dist')
+    contentBase: path.join(__dirname, 'dist'),
+    port:9000,
   },
   plugins:[
     new htmlWebpackPlugin({
       template:"./index.html",
-      filename:"index.html"
+      filename:"index.html",
+      inject:"head"
     }),
     new webpack.HotModuleReplacementPlugin()
   ]

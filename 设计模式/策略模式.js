@@ -25,6 +25,7 @@ var Validator = function () {
     this.cache = [];
 }
 Validator.prototype.add = function (val, rules) {
+    
     for (let i = 0; i < rules.length; i++){        
         let errorMsg = rules[i].errorMsg,
             strategy = rules[i].strategy.split(":");    
@@ -41,7 +42,8 @@ Validator.prototype.stat = function () {
     for (let i = 0; i < this.cache.length; i++){
         let errorMsg = this.cache[i]();
         if (errorMsg) {
-            return errorMsg;
+            console.log(errorMsg)
+            //return errorMsg;
         }
     }
 }
@@ -61,3 +63,4 @@ validator.add(registerForm.password, [{
     strategy: "isPassword",
     errorMsg: "密码不符合规则"
 }]);
+validator.stat();
