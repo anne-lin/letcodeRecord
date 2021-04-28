@@ -31,6 +31,17 @@
     </ul>
     <button @click="addList">增加列表</button>
   </div>
+
+  <div>
+    <p>插槽，作用域插槽以及插槽的传值</p>
+    <!-- <slot-demo></slot-demo> -->
+  </div>
+
+  <div>
+    <p>异步组件</p>
+    <slot-demo v-if="showAsync"></slot-demo>
+    <button @click="showAsync=!showAsync">加载组件</button>
+  </div>
 </div>
 </template>
 <script>
@@ -38,12 +49,14 @@ import Box1 from "../../components/Box1"
 import Box2 from "../../components/Box2"
 import event from "../../util/event"
 import InputNative from "../../components/InputNative"
+//import SlotDemo from "../../components/slot/SlotDemo"
 
 export default {
   components:{
     Box1,
     Box2,
-    InputNative
+    InputNative,
+    SlotDemo:()=>import("../../components/slot/SlotDemo"),
   },
   methods: {    
      handleChange(event){
@@ -73,7 +86,8 @@ export default {
       value:0,
       inputVal1:"",
       inputVal:"",
-      list:["a","b","c"]
+      list:["a","b","c"],
+      showAsync:false,
     }
   },
 }
