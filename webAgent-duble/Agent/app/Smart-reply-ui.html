@@ -1,0 +1,35 @@
+<div id="chat_smart_reply">
+    <!--搜索框-->
+    <div class="handle_bar">
+        <div class="serach_input">
+            <input type="text" placeholder="请输入您要问的问题" data-bind="textInput: smartReplySearchTxt"/>
+        </div>
+        <div class="handle_button">
+            <span><i class="fa fa-search" data-bind="click: searchReply"></i></span>
+            <span><i class="fa fa-refresh" data-bind="click: reflash"></i></span>
+        </div>
+    </div>
+    <!--搜索结果-->
+    <div class="content_bar">
+        <div data-bind="visible: smartContent">
+            <ul data-bind="foreach:smartReply">
+                <li>
+                    <p data-bind="text:question">
+                    </p>
+                    <p>
+                        <span data-bind="text: answer "></span>
+                        <span  data-bind="click: $parent.sendSmartReply.bind($index())"></span>
+                        <!--<span data-bind='visible:msgtype=="1"'>[图片]</span>-->
+                    </p>
+                </li>
+            </ul>
+        </div>
+        <div class="no-content" data-bind="visible: !smartContent()">
+            <!-- <img data-bind="attr:{ src: '../images/' + photoName() }" height="64" width="80"/>-->
+            <!--<div data-bind="style:{background:url('../images/'+photoName())}"></div>-->
+            <div data-bind="css: {mostar: photoName()<0}"></div>
+            <p data-bind="text:smartTip"></p>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,396 @@
+body {
+  padding: 0px;
+  margin: 0px;
+  overflow: hidden;
+  font-size: 14px;
+  font-family: Microsoft Yahei;
+  color: #374051; }
+
+#chat_pane {
+  width: 888px;
+  height: 622px;
+  display: none;
+  position: absolute;
+  left: 255px;
+  top: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  overflow: hidden;
+  display: none;
+  z-index: 30000; }
+
+.ibox-title {
+  overflow: hidden;
+  height: 72px;
+  color: white;
+  background: #35b3e1; }
+  .ibox-title .chat-admin {
+    float: left;
+    margin-top: 10px; }
+  .ibox-title .chat-close {
+    float: right;
+    text-align: center; }
+    .ibox-title .chat-close a {
+      width: 30px;
+      height: 30px;
+      display: inline-block;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 30px; }
+      .ibox-title .chat-close a:hover {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.2); }
+      .ibox-title .chat-close a .fa-close {
+        font-size: 18px; }
+
+.admin-img {
+  background: url("../images/admin.jpg");
+  background-size: 46px;
+  border-radius: 23px;
+  width: 46px;
+  height: 46px;
+  margin: 0px 10px 0px 20px;
+  vertical-align: middle;
+  float: left; }
+
+.chat-users {
+  width: 219px;
+  position: absolute;
+  top: 72px;
+  left: 0;
+  bottom: 0;
+  background: #fbfcfd;
+  border-right: 1px solid #e2eaec;
+  overflow-y: auto; }
+
+.chat-tip {
+  color: #999;
+  text-align: center;
+  padding: 60px 0px; }
+  .chat-tip .fa-comment {
+    font-size: 80px;
+    color: #eff4f5;
+    margin-bottom: 4px; }
+
+.chat-user {
+  padding: 8px 10px;
+  height: 55px; }
+
+.chat-user.selected {
+  background: #eff4f5; }
+
+.chat-avatar {
+  width: 42px;
+  height: 42px;
+  float: left;
+  margin-right: 8px;
+  display: inline-block;
+  text-align: center;
+  color: white;
+  border-radius: 21px; }
+
+.fa-weixin, .fa-desktop {
+  font-size: 22px;
+  line-height: 42px; }
+
+.chat-user-name {
+  padding-top: 4px;
+  cursor: pointer; }
+  .chat-user-name a {
+    display: block;
+    text-decoration: none;
+    color: #374051; }
+  .chat-user-name .lastMsg {
+    width: 110px;
+    display: inline-block;
+    color: #999;
+    font-size: 12px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden; }
+  .chat-user-name .chat-user-msgNumber {
+    font-size: 12px;
+    background: #ff595f;
+    border-radius: 40px;
+    color: white;
+    padding: 0px 5px;
+    float: right; }
+
+.end {
+  border-top: 1px solid #e2eaec;
+  border-bottom: 1px solid #e2eaec;
+  padding: 2px 12px;
+  background: #eff4f5; }
+
+.chat-content-info {
+  position: absolute;
+  left: 219px;
+  top: 72px;
+  bottom: 0px;
+  right: 0px;
+  background-color: white; }
+  .chat-content-info .chat-tip {
+    border: none;
+    padding: 120px 0px; }
+  .chat-content-info .fa-comment {
+    font-size: 160px; }
+
+.chat-content {
+  position: absolute;
+  left: 0px;
+  right: 200px;
+  top: 0px;
+  bottom: 0px; }
+
+.chat-discussion {
+  padding: 10px;
+  height: 380px;
+  overflow-y: auto; }
+
+.chat-message-form {
+  width: 100%;
+  position: absolute;
+  top: 380px;
+  border-top: 1px solid #e2eaec; }
+  .chat-message-form .top-bar {
+    padding: 4px 20px; }
+  .chat-message-form .message-input {
+    width: 100%;
+    height: 86px;
+    resize: none;
+    border: none;
+    padding: 0 15px 8px;
+    box-sizing: border-box;
+    line-height: 1.6em;
+    outline: none;
+    vertical-align: bottom; }
+  .chat-message-form .bottom-bar {
+    background: #fbfcfd;
+    border-top: 1px solid #e2eaec;
+    padding: 0 20px;
+    line-height: 48px;
+    overflow: hidden; }
+    .chat-message-form .bottom-bar a {
+      float: left;
+      padding-left: 10px;
+      text-decoration: none;
+      color: #777;
+      cursor: pointer; }
+    .chat-message-form .bottom-bar a:hover {
+      color: #555; }
+    .chat-message-form .bottom-bar .send-btn {
+      float: right;
+      padding: 0 15px;
+      line-height: 30px;
+      background: #53b4e2;
+      border-radius: 3px;
+      border: 1px solid #49a2cd;
+      color: #fff;
+      margin-top: 6px;
+      outline: none; }
+      .chat-message-form .bottom-bar .send-btn:hover {
+        background: #49aad8; }
+
+#chat-message-form-shadow {
+  width: 100%;
+  height: 170px;
+  position: absolute;
+  bottom: 0px;
+  background-color: #eee;
+  opacity: 0.5; }
+
+#uploadBtn {
+  display: inline-block;
+  vertical-align: middle; }
+  #uploadBtn .fa-folder-o {
+    color: #999; }
+    #uploadBtn .fa-folder-o:hover {
+      color: #555; }
+
+#fileToUpload {
+  display: none; }
+
+#progressNumber {
+  border: 1px solid;
+  font-size: 12px;
+  display: none; }
+
+.chat-message {
+  overflow: hidden;
+  margin-top: 15px; }
+  .chat-message .time {
+    color: #777;
+    font-size: 12px; }
+
+.message {
+  background: #fff;
+  text-align: left;
+  display: inline-block;
+  padding: 10px;
+  border-radius: 4px;
+  max-width: 400px;
+  margin: 4px 6px 0px 6px;
+  position: relative;
+  word-break: break-all; }
+
+.arrow {
+  display: inline-block;
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent; }
+
+.arrow.recv {
+  left: -6px;
+  border-right: 6px solid #ecf2f4; }
+
+.arrow.send {
+  right: -6px;
+  border-left: 6px solid #b8f4d5; }
+
+.message.rec {
+  float: left;
+  background: #ecf2f4; }
+
+.message.send {
+  float: right;
+  background: #b8f4d5; }
+
+.time.recv {
+  text-align: left; }
+
+.time.send {
+  text-align: right; }
+
+.chat-user-info {
+  width: 200px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  border-left: 1px solid #e2eaec;
+  background: #fbfcfd;
+  padding-top: 20px;
+  box-sizing: border-box;
+  overflow: auto; }
+  .chat-user-info dl {
+    padding: 0 20px 20px; }
+  .chat-user-info dt {
+    margin-bottom: 5px;
+    color: #222;
+    font-weight: normal; }
+    .chat-user-info dt .btn {
+      padding: 0px 6px;
+      background: #21d376;
+      color: #fff;
+      border: none;
+      font-size: 12px;
+      border-radius: 5px;
+      margin-left: 15px;
+      height: 22px;
+      line-height: 22px; }
+      .chat-user-info dt .btn:hover {
+        background: #17c96c;
+        text-decoration: none; }
+  .chat-user-info dd {
+    margin-bottom: 5px;
+    line-height: 22px;
+    font-size: 12px;
+    color: #666;
+    margin-left: 0px;
+    overflow: hidden;
+    word-break: break-all; }
+    .chat-user-info dd a {
+      color: #0096c4; }
+      .chat-user-info dd a:hover {
+        text-decoration: none;
+        color: #48b6d7; }
+    .chat-user-info dd .status {
+      display: inline-block;
+      height: 18px;
+      line-height: 18px;
+      font-size: 12px;
+      border-radius: 4px;
+      padding: 0px 5px;
+      white-space: nowrap;
+      background: #fc7c79;
+      color: #fff;
+      margin-right: 5px; }
+  .chat-user-info input[disabled] {
+    width: 100%;
+    border-color: transparent;
+    background: #eff4f5;
+    color: #666;
+    padding: 0px 4px;
+    border-radius: 4px; }
+
+::-webkit-scrollbar-track {
+  background-color: #f5f5f5; }
+
+::-webkit-scrollbar {
+  width: 10px;
+  background-color: #f5f5f5; }
+
+::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  -webkit-border-radius: 6px; }
+
+::-webkit-scrollbar-track-piece {
+  -webkit-border-radius: 6px; }
+
+#agentSection {
+  width: 272px;
+  height: 510px;
+  margin: 0 auto;
+  padding: 5px;
+  box-shadow: 0px 0px 15px lightgrey;
+  position: relative;
+  display: none;
+  background-color: white;
+  overflow-y: auto; }
+
+#agentSection_title {
+  text-align: center;
+  font-size: 20px;
+  margin: 10px; }
+
+#agentSection table {
+  width: 100%;
+  color: #525252; }
+
+#agentSection table tbody {
+  border: none; }
+
+#agentSection table tr td, #agentSection table tr th {
+  margin: 4px 0px;
+  border: none;
+  text-align: center; }
+
+#agentSection table tr td:first-child {
+  width: 65px;
+  padding-left: 15px; }
+
+#agentSection table tr td:nth-child(2) {
+  width: 100px; }
+
+#agentSection table tr td::selection {
+  background-color: white; }
+
+#agentSection table tr th {
+  padding: 0px;
+  font-weight: normal;
+  background-color: #E8E8E8;
+  color: #337ab7;
+  text-align: center; }
+
+#agentSection table tr th span::selection {
+  background-color: #E8E8E8; }
+
+#closeTransfer {
+  float: right;
+  cursor: pointer;
+  top: -5px;
+  position: relative;
+  font-size: 24px; }
+
+/*# sourceMappingURL=agent.css.map */

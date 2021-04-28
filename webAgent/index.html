@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="public_css/bootstrap.min.css"/>
+    <script src="public_lib/jquery-2.1.4.min.js"></script>
+    <script src="public_lib/bootstrap.min.js"></script>
+    <style>
+        #content {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            border: 1px solid #eee;
+        }
+
+        #title {
+            padding: 4px;
+        }
+
+        .btns {
+            background-color: white;
+            border: 1px solid;
+            padding: 0px 10px;
+            border-radius: 4px;
+        }
+        .inputs {
+            width: 100px;
+            padding: 0px 4px;
+        }
+
+        .disabled {
+            background-color: grey;
+        }
+
+    </style>
+</head>
+<body>
+<div id="title">
+    登录过程:<span id="stateText"></span>
+    登录结果：<span id="result"></span>
+    entId<input type="text" id="entId" class="inputs" value="1212"/>
+    agentId<input type="text" id="agentId" class="inputs" value="1000001570"/>
+    password<input type="text" id="password" class="inputs" value="123456"/>
+    <!--entId<input type="text" id="entId" class="inputs" value="7766114"/>-->
+    <!--agentId<input type="text" id="agentId" class="inputs" value="1140"/>-->
+    <!--password<input type="text" id="password" class="inputs" value="7777777"/>-->
+    <button class="btns" id="logInBtn">登录</button>
+    <button class="btns" id="logOutBtn">登出</button>
+    <button class="btns" id="setBusy">置忙</button>
+    <button class="btns" id="setReady">置闲</button>
+    <button id="phoneBtn" class="btns">电话图标</button>
+    状态：<span id="state"></span>
+</div>
+
+<div id="content"></div>
+<script src="WebAgent.js"></script>
+<!--<script src="http://10.130.41.151:9090/WebAgent3.2/WebAgent.js"></script>-->
+<!--<script src="http://10.130.41.142/WebAgent3.2/WebAgent.js"></script>-->
+<script>
+    function isLocking() {
+        console.log('[CDesk] 当前置忙置闲状态不能使用');
+        $("#setBusy").addClass('disabled');
+        $("#setReady").addClass('disabled');
+    }
+
+    function unLocking(s,moreStates) {
+        console.log('[CDesk] 当前置闲置忙状态能使用,状态为:'+s);
+        $("#setBusy, #setReady").removeClass('disabled');
+        if(s == 'BUSY'){
+            $("#state").text('已经置忙');
+            $("#phoneBtn").removeClass('disabled');
+            $("#setBusy").addClass('disabled');
+        }
+        else{
+            $("#state").text('已经置闲');
+            $("#setReady").addClass('disabled');
+            if(moreStates.waState === "READY"){
+                $("#phoneBtn").addClass('disabled');
+            }
+        }
+    }
+
+            var cchatUrl = "http://10.130.41.142/WebAgent/WA/theme/cchat.js";
+//    var cchatUrl = "http://10.130.41.151:9090/WebAgent3.2/WA/theme/cchat.js";
+
+    WebAgent.init({
+            useLocal: true,
+        callback: function() {
+            WebAgent.WaInit({
+                ui: false,
+                callback:function(autoLoginResult,autoLoginData) {
+                    WebAgent.attachModule(cchatUrl, function() {
+//                        WebAgent.WaChat.toggle();
+                        WebAgent.ChatInit({
+                            selectorName: "#content",
+                            loadBootstrap: false,
+                            callback: function() {
+                                $("#logInBtn").click(function() {
+                                    WebAgent.multiChannelLogin(WebAgent, {
+                                        entId        : $("#entId").val(),
+                                        agentId      : $("#agentId").val(),
+                                        agentPassword: $("#password").val(),
+                                        agentNumber  : "",
+                                        waAutoLoginResult: false,
+                                        isLocking: isLocking,
+                                        unLocking:  unLocking
+                                    });
+
+                                });
+
+//                                if(autoLoginResult) {
+//                                    var data = autoLoginData;
+//                                    console.log("[WebAgent]自动登录成功:" + JSON.stringify(data));
+//                                    var awayStatus = data && data.ext && data.ext.awayStatus;
+//                                    WebAgent.multiChannelLogin(WebAgent, {
+//                                        entId        : data.ext.entId,
+//                                        agentId      : data.ext.agentId,
+//                                        agentPassword: data.ext.password,
+//                                        agentNumber  : "",
+//                                        waAutoLoginResult: true,
+//                                        waAutoLoginData: data,
+//                                        awayStatus: awayStatus,
+//                                        isLocking: isLocking,
+//                                        unLocking:  unLocking
+//                                    });
+//                                }
+
+                                WebAgent.ChatToggle();
+
+                                $("#logOutBtn").click(function() {
+                                    WebAgent.multiChannelLogout();
+                                    lougoutFlag = true;
+                                });
+
+                                $("#setBusy").click(function() {
+                                    WebAgent.multiChannelState.agentBusy(function(){
+                                        console.log('[CDesk] 多渠道能力置忙成功');
+                                    },function(){
+                                        console.log('[CDesk] 多渠道能力置忙失败');
+                                    });
+                                });
+
+                                $("#setReady").click(function() {
+                                    WebAgent.multiChannelState.agentReady(function(){
+                                        console.log('[CDesk] 多渠道能力置闲成功');
+                                    },function(){
+                                        console.log('[CDesk] 多渠道能力置闲失败');
+                                    });
+                                });
+
+                                //多渠道登录注册函数
+                                WebAgent.multiRegisterEvent("login", function (data) {
+                                    if(data.type == 'loginSuccess') {
+                                        console.log("loginSuccess");
+
+                                    }
+                                    if(data.type == 'loginFail') {
+                                        console.log(data.channel + "-loginFail");
+                                        alert("登录失败");
+                                    }
+                                    $("#result").text(data.type);
+                                    $("#stateText").text(data.type);
+                                });
+
+                                //正在登出多渠道注册函数
+                                WebAgent.multiRegisterEvent("logout", function() {
+                                    console.log("[CDesk]:正在登出多渠道");
+                                });
+
+                                //登录过程提示
+                                WebAgent.multiRegisterEvent("setAgentStateText", function(data) {
+                                    $("#stateText").text(data.text);
+                                });
+
+                                WebAgent.ChatRegisterEvent("openfireDisconnect", function() {
+                                    $("#stateText").text("openfire断开");
+                                    alert("openfire断开");
+                                });
+
+                                WebAgent.ChatRegisterEvent("butelAjaxError", function(data) {
+                                    console.log('butelAjaxError:' + "ButelState:" + data.ButelState + ", AgentStatus:" + data.AgentStatus);
+                                });
+                            }
+                        });
+                    });
+
+                    WebAgent.registerEventHandler(function(data) {
+                        if(data.type == "EVENT_SOCKET_ABNORMAL_DISCONNECT") {
+                            $("#stateText").text("socket 断开");
+                            alert("socket 断开");
+                        }
+                    });
+
+                    WebAgent.registerEventHandler(function(data) {
+                        if(data.type == "EVENT_SOCKET_RECONNECTING") {
+                            alert("正在恢复登录，请稍后");
+                        }
+                    });
+
+                    //自动登录
+                    WebAgent.registerResultHandler(function(data) {
+                        if(data.type == "autoLogin") {
+                            if(data.code == 0) {
+                                console.log("[WebAgent]自动登录成功:" + JSON.stringify(data));
+                                var awayStatus = data && data.ext && data.ext.awayStatus;
+                                WebAgent.multiChannelLogin(WebAgent, {
+                                    entId        : data.ext.entId,
+                                    agentId      : data.ext.agentId,
+                                    agentPassword: data.ext.password,
+                                    agentNumber  : "",
+                                    waAutoLoginResult: true,
+                                    waAutoLoginData: data,
+                                    awayStatus: awayStatus,
+                                    isLocking: isLocking,
+                                    unLocking:  unLocking
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+</script>
+</body>
+</html>

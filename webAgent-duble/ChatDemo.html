@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="viewport" content="width=device-width">
+    <script src="public_lib/jquery-2.1.4.min.js"></script>
+    <style>
+        #content{
+            display: inline-block;
+            width: 700px;
+            height: 600px;
+            position: relative;
+            border: 1px solid #eee;
+            /* margin: 0 auto;*/
+            margin-top: 0px;
+        }
+        #quickReply {
+            display: inline-block;
+            width: 540px;
+            height: 500px;
+            border: 1px solid #eee;
+            vertical-align: top;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <span id="currentStatus">已经置忙</span>
+    <button id="setReady" class="btn btn-default">置闲</button>
+    <button id="setBusy" class="btn btn-default" disabled>置忙</button>
+    <button class="btns" id="commonLagBtn">常用语</button>
+    <button class="btns" id="smartReplyBtn">智能回复</button>
+    <button class="btns" id="loadQuickly">快捷</button>
+    entId: <input id="entId" type="text" value="20171213"/>
+    agentId: <input id="agentId" type="text" value="2001"/>
+    <button id="login">登录</button>
+    <button id="logOut">登出</button>
+</div>
+
+<div id="content"></div>
+<div id="quickReply"></div>
+<script src="WebAgent.js"></script>
+<script>
+    $("#setReady").click(function() {
+        WebAgent.ChatSetReady();
+    });
+
+    $("#setBusy").click(function() {
+        WebAgent.ChatSetBusy();
+    });
+
+    $("#logOut").click(function() {
+        WebAgent.ChatLogout();
+    });
+    WebAgent.init({
+        useLocal: true,
+        callback: function() {
+            WebAgent.ChatInit({
+                useLocal    : true,
+                selectorName: "#content",
+                callback    : function () {
+//                    WebAgent.ChatLogin({
+//                        entId  : $("#entId").val(),
+//                        agentId: $("#agentId").val(),
+//                        password: '1'
+//                    });
+                    $("#login").click(function () {
+                        WebAgent.ChatLogin({
+                            entId  : $("#entId").val(),
+                            agentId: $("#agentId").val(),
+                            password: '1'
+                        });
+                    });
+
+                    WebAgent.ChatRegisterEvent("loginCallback", function () {
+                        WebAgent.ChatToggle();
+                        console.log("chat 登录成功");
+                    });
+
+                    //置忙成功回调
+                    WebAgent.ChatRegisterEvent('busyCallback', function () {
+                        console.log('[CCODMultiChanel] 置忙IM成功');
+                        $("#currentStatus").text("已经置忙");
+                        $("#setReady").prop("disabled", false);
+                        $("#setBusy").prop("disabled", true);
+                    });
+
+                    //置闲成功回调
+                    WebAgent.ChatRegisterEvent('readyCallback', function () {
+                        console.log('[CCODMultiChanel] 置闲IM成功');
+                        $("#currentStatus").text("已经置闲");
+                        $("#setReady").prop("disabled", true);
+                        $("#setBusy").prop("disabled", false);
+                    });
+
+                    //加载智能回复
+                    $("#smartReplyBtn").click(function(){
+                        WebAgent.loadSmartReplyDom("#quickReply");
+                    });
+
+                    $("#loadQuickly").click(function(){
+                        WebAgent.loadQuickReplyDom("#quickReply");
+                    })
+
+                    //加载常用语数据
+                    $("#commonLagBtn").click(function() {
+                        WebAgent.loadQuickReplyData();
+                    });
+
+                    //chat登出成功
+                    WebAgent.ChatRegisterEvent("logoutCallback", function () {
+                        console.log("chat 登出成功");
+                    });
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

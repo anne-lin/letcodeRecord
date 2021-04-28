@@ -1,0 +1,18 @@
+<div class="users-offline" id="robotAgent">
+    <div class="chat-users-title">
+        <span>当前坐席的助手(<span data-bind="text: robotAgentList() && robotAgentList().length"></span>)</span>
+        <span data-bind="css: {'chat-users-arrow-down': !isOfflineListShow(), 'chat-users-arrow-up': isOfflineListShow()},click: function(data){toggleChatList('offline', data, event);}"></span>
+    </div>
+    <div id="offlineChatList" data-bind="template: {name:'robotAgentList', foreach: robotAgentList}"></div>
+</div>
+<script type="text/html" id="robotAgentList">
+    <div class="chat-user" data-bind="click:$root.selectedRobotAgent, css: {'selected': $data == $root.selectedRobotAgent()}">
+        <div class="chat-user-name">
+            <a href="#">
+                <!-- <span data-bind="text: nickName() || visitorInfo().workOrderName()"></span>
+                <span class="chat-user-timing" data-bind="text: timing, visible: !!timing() && online()"></span> -->
+            </a>
+           <!--  <span class="lastMsg" data-bind="html:lastMsg"></span> -->
+        </div>
+    </div>
+</script>

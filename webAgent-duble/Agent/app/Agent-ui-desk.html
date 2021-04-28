@@ -1,0 +1,355 @@
+<div id="chat_pane">
+
+    <div class="chat-users">
+        <div class="queue-info">
+            <span>在线客服数:<span class="queue-info-data" data-bind="text: onlineAgentNum">253</span></span>
+            <span>排队客户数:<span class="queue-info-data" data-bind="text: queueUserNum">162</span></span>
+        </div>
+        <div class="users-online">
+            <div class="chat-users-title">
+                <span>进行中对话(<span data-bind="text: onlineArr() && onlineArr().length"></span>)</span>
+                <span
+                    data-bind="css: {'chat-users-arrow-down': !isOnlineListShow(), 'chat-users-arrow-up': isOnlineListShow()}, click: function(data){toggleChatList('online',data, event);}"></span>
+            </div>
+            <div id="onlineChatList" data-bind="template: {name:'userList', foreach: onlineArr}"></div>
+        </div>
+
+        <div class="users-online">
+            <div class="chat-users-title">
+                <span>已结束对话(<span data-bind="text: offlineArr() && offlineArr().length"></span>)</span>
+                <span
+                    data-bind="css: {'chat-users-arrow-down': !isOfflineListShow(), 'chat-users-arrow-up': isOfflineListShow()},click: function(data){toggleChatList('offline', data, event);}"></span>
+            </div>
+            <div id="offlineChatList" data-bind="template: {name:'userList', foreach: offlineArr}"></div>
+        </div>
+
+        <div class="users-online">
+            <div class="chat-users-title">
+                <span>内部沟通坐席(<span data-bind="text: internalChatList() && internalChatList().length"></span>)</span>
+                <span
+                    data-bind="css: {'chat-users-arrow-down': !isInternalChatListShow(), 'chat-users-arrow-up': isInternalChatListShow()},click: function(data){toggleChatList('internalChatList', data, event);}"></span>
+            </div>
+            <div id="internalChatList" data-bind="template: {name:'userList', foreach: internalChatList}"></div>
+        </div>
+
+        <div class="users-offline">
+            <div class="chat-users-title">
+                <span>坐席列表(<span data-bind="text: agentListsLength()"></span>)</span>
+                <span
+                    data-bind="css: {'chat-users-arrow-down': isAgentAllListShow(), 'chat-users-arrow-up': !isAgentAllListShow()},click: function(data){toggleChatList('agentAllList', data, event);}"></span>
+            </div>
+            <div id="agentAllList" data-bind="template: {name:'agentLists', foreach: agentLists}"></div>
+        </div>
+    </div>
+
+    <div class="chat-content-info" data-bind="visible: !userList().length || !currentUser().ent">
+        <div class="chat-tip">
+            <i class="fa fa-comment"></i>
+
+            <p>欢迎使用</p>
+        </div>
+    </div>
+
+    <div class="chat-content-info" data-bind="visible: currentUser().name">
+        <div class="chat-content">
+            <!-- ko foreach: userList().concat(internalChatList()) -->
+            <div class="chat-discussion"
+                data-bind="visible: $data == $root.currentUser(),css:{scrollToBottom:$data == $root.currentUser()}">
+                <div class="chatTip" data-bind="visible: hasMoreHistory">
+                    <p style="background: #fff">
+                        <a href="javascript:void(0);" style="color: #5bc1df"
+                            data-bind="click: $root.getMoreHistoryChats">查看更多消息</a>
+                    </p>
+                </div>
+                <!-- ko foreach: messages -->
+                <div class="chat-message">
+                    <!--ko if:direction == 'recv'||direction == 'send'-->
+                    <div data-bind="css: 'time ' + direction">
+                        <span
+                            data-bind="text: name ? name : (direction == 'recv' ? name : $root.username)"></span>&nbsp;<span
+                        data-bind="text: time()"></span>
+                    </div>
+                    <!--<img data-bind="css: 'message-avatar ' + direction" src="images/head.jpg" alt="">-->
+                    <div data-bind="css: 'message ' + direction ">
+                        <span data-bind="css: 'arrow ' + direction"></span>
+
+                        <span class="message-content">
+                            <!-- ko if: type == "text" -->
+                              <span data-bind="html: text , click: $root.searchSmartReply.bind(text)"></span>
+                            <!-- /ko -->
+
+                            <!-- ko if: type == "image"-->
+                             <span>
+                                  <img alt=""
+                                      data-bind="attr:{src:text.zoom || text.original}, click:$root.previewImg"
+                                      width="200"/>
+                             </span>
+                            <!-- /ko -->
+
+                            <!-- ko if: type == "file" -->
+                             <span>
+                                  <a data-bind="attr:{href:text}" target="_blank">点击下载</a>
+                             </span>
+                            <!-- /ko -->
+
+                            <!-- ko if: type == "voice" -->
+                             <span>
+                                  <a data-bind="attr:{href:text}" target="_blank">点击下载</a>
+                             </span>
+                            <!-- /ko -->
+
+                            <!-- ko if: type == "video" -->
+                             <span class="videoImg">
+                                 <img alt=""
+                                     data-bind="attr:{src:$root.videoImg} , click:$root.palyVideo"
+                                     width="200"/>
+                                 </br>
+                                 <div class="video-loader-box">
+                                     <div class="video-loader"></div>
+                                 </div>
+                                  <a data-bind="attr:{href:text}" target="_blank">点击下载</a>
+
+                             </span>
+                            <!-- /ko -->
+                        </span>                        
+                    </div>
+                    <div class="retract-msg" data-bind="visible:isShowWithdrawBtn,click: function(){$root.withdrawBtn(messageId,'send')}">撤回</div>
+                    <!-- /ko -->
+
+                    <!--ko if:direction == 'tip' -->
+                    <div class="chatTip">
+                        <p data-bind="html: text"></p>
+                    </div>
+                    <!-- /ko -->
+                </div>
+                <!-- /ko -->
+            </div>
+            <!-- /ko -->
+
+            <div class="chat-message-form">
+                <div id="emojiPane" data-bind="visible: emojiPaneDis">
+                    <span
+                        class="i">/::)</span><span>/::~</span><span>/::B</span><span>/::|</span><span>/::<</span><span>/::$</span><span>/::X</span><span>/::Z</span><span>/::@</span><span>/::P</span><span>/::D</span><span>/::O</span><span>/::(</span><span>/::+</span><span>/::d</span><span>/::Q</span><span>/::T</span><span>/::g</span><span>/::8</span><span>/::!</span><span>/::L</span><span>/:xx</span><span>/::></span><span>/:8-)</span><span>/::'(</span><span>/::-|</span><span>/:,@P</span><span>/:--b</span><span>/:,@o</span><span>/:|-)</span><span>/::,@</span><span>/:,@f</span><span>/::-S</span><span>/:,@x</span><span>/:,@@</span><span>/::-O</span><span>/:>-|</span><span>/:P-(</span><span>/::'|</span><span>/:X-)</span><span>/:,@!</span><span>/:!!!</span><span>/:bye</span><span>/:<@</span><span>/:@></span><span>/::*</span><span>/:@x</span><span>/:8*</span><span>/:pd</span><span>/:?</span><span>/:,@-D</span><span>/:wipe</span><span>/:dig</span><span>/:handclap</span><span>/:&-(</span><span>/:B-)</span><span>/:&lt;W&gt;</span><span>/:oo</span><span>/:li</span><span>/:@)</span><span>/:jj</span><span>/:@@</span><span>/:kn</span><span>/:no</span><span>/:ok</span><span>/:oY</span><span>/:eat</span><span>/:pig</span><span>/:sun</span><span>/:&lt;L&gt;</span><span>/:&lt;O&gt;</span><span>/:hug</span><span>/:bad</span><span>/:lvu</span><span>/:cake</span><span>/:shit</span><span>/:moon</span><span>/:bome</span><span>/:rose</span><span>/:gift</span><span>/:weak</span><span>/:fade</span><span>/:beer</span><span>/:turn</span><span>/:skip</span><span>/:love</span><span>/:jump</span><span>/:heart</span><span>/:break</span><span>/:share</span><span>/:footb</span><span>/:kotow</span><span>/:shake</span><span>/:coffee</span><span>/:strong</span><span>/:circle</span><span>/:basketb</span><span>/:ladybug</span><span>/:showlove</span><span>/:v</span><span>/:#-0</span><span>/:hiphot</span><span>/:kiss</span><span>/:&lt;&amp;</span><span>/:&amp;&gt;</span>
+                </div>
+                <div class="top-bar">
+                    <span id="expressBtn" data-bind="click:function() {emojiPaneDis(!emojiPaneDis())}">
+                        <i id="emojiBtn"></i>
+                    </span>
+                    <span id="uploadBtn">
+                    </span>
+                    <input type="file" name="fileToUpload" id="fileToUpload"/>
+                    <span id='progressNumber'></span>
+                    <span data-bind="visible: currentUser().serviceAduio() && currentUser().chatBoxType() =='custom-chat', click:makeCallAudio"
+                        class="callOut-audio-icon">
+                    </span>
+                    <span data-bind="visible: currentUser().serviceVideo() && currentUser().chatBoxType() =='custom-chat', click:makeCallVideo"
+                        class="callOut-video-icon">
+                    </span>
+                    <span id="send-request"
+                        data-bind="visible: currentUser().isSendEvalRequestBtnShow(),css: {'isSendEvalRequest': !currentUser().isSendEvalRequestBtnShow()},click: requestEvaluate">
+                    </span>
+
+                    <div class="chat-checked">
+                        <span id="openAutoMatchTipIcon" class="tipIcon">
+                        <i class="fa fa-exclamation" style="font-size: 3px;vertical-align: super; color: red;"></i>
+                    </span>
+                        <span>
+                        <input type="checkbox" style="vertical-align: top;margin-right: 5px;"
+                               data-bind="checked: openAutoMatch"/>自动匹配常用语
+                        </span>
+                        <div class="openAutoMatchTip">开启时,系统会根据输入内容自动匹配常用语内容并呈现,点击常用语内容会插入到输入框，关闭时点击常用语内容直接发送给客户</div>
+                    </div>
+
+                    <div data-bind="visible: intellHelp" class="chat-checked" style="margin-right: 15px">
+                        <span id="openIntellTipIcons" class="tipIcon">
+                        <i class="fa fa-exclamation" style="font-size: 3px;vertical-align: super; color: red;"></i>
+                    </span>
+                        <span>
+                        <input type="checkbox" style="vertical-align: top;margin-right: 5px;"
+                            data-bind="checked: openIntellHelp"/>智能协助
+                    </span>
+                        <div class="openIntellTip">开启智能协作时，机器人将自动回答客户问题</div>
+                    </div>
+                </div>
+
+                <p id="error" class="error" data-bind="visible:msgContentErrorDis,text:msgContentErrorDis"></p>
+
+                <textarea class="message-input" id="textArea"
+                    data-bind="textInput: inputText, event: {keydown: sendMessageByKey, keyup: function(data, event){searchComLang('autoMatch', data, event)}}"
+                    placeholder="输入消息内容,请用空格分隔多个链接地址"></textarea>
+
+                <div class="bottom-bar">
+                    <a class="kickoffUser" data-bind="click: kickoffUser">结束会话</a>
+                    <a data-bind="visible: currentUser().isTransferAgentBtnShow(),click: getAgentList.bind($data,'transfer')">转接坐席</a>
+                    <a data-bind="visible: currentUser().isAddAgentBtnShow(),click: getAgentList.bind($data,'addAgent')">添加坐席</a>
+                    <span class="session-time" data-bind="visible : currentUser().online()">
+                        会话时长
+                        <span data-bind="text: currentUser().showSessionTime()"></span>
+                    </span>
+                    <!--<a data-bind="click: sendSatisfy">满意度调查</a>-->
+                    <!--<button class="send-btn" data-bind="click: function(){$root.sendMessage('text')}">发送</button>-->
+                </div>
+            </div>
+            <div id="send-btn-group">
+                <button id="btn-send" data-bind="click: checkWord">发送</button>
+                <button id="btn-caret" data-bind="click: toggleBtnKeyList">
+                    <span class="fa fa-caret-up"></span>
+                </button>
+                <ul id="btn-key-list" data-bind="visible: btnKeyListDis, foreach: btnKeyList, event: {blur: blur}">
+                    <li data-bind="click: $parent.choseSendKey">
+                        <div style="display: inline-block;width: 15px;">
+                            <span class="fa fa-check" data-bind="visible: faCheck"></span>
+                        </div>
+                        <span data-bind="text: desc"></span>
+                    </li>
+                </ul>
+            </div>
+            <div id="chat-message-form-shadow" data-bind="visible: !currentUser().online()"></div>
+            <div class="chat-box-tip" data-bind="visible:msgTip()">
+                <div class="sensitiveTip">
+                    <span data-bind="html:msgWordHead"></span>
+                    <div data-bind="html:msgWord"></div>
+                    <button data-bind="click:closeTip.bind($data,'sensitive')">知道了</button>
+                </div>
+            </div>
+            <div class="chat-box-tip" data-bind="visible:keepChatTip().keepchatTipShow">
+                <div class="keep-chat-tip">
+                    <div>客户已结束对话，是否关闭聊天窗口</div>
+                    <button class="red-skin" data-bind="click:closeTip.bind($data,'chatClose')">关闭</button>
+                    <button data-bind="click:closeTip.bind($data,'chatKeep')">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="agentSection" data-bind="style:{width:currentUser().chatBoxType() == 'agent-group'? '675px':'450px'}">
+        <p class="title" data-bind="text:selectAgentForm().title"></p>
+        <div class="agent-lists" >
+            <div class="agent-lists-left">
+                <div>
+                    <div class="serach-input">
+                        <span><i class="fa fa-search"></i></span>
+                        <input type="text" placeholder="搜索" data-bind="textInput: agentSearchText, event: {keyup: function(){searchText('agentListSearch')}}"/>
+<!--                         <span><i class="fa  fa-times-circle" style="font-size: 12px;"></i></span>
+ -->                    </div>
+                </div>
+                <ul class="agent-select-list" data-bind="visible:agentEabledSelectLists().length>0,foreach:agentEabledSelectLists">
+                    <li>
+                        <div class="skill-name">
+                            <span class="icon chat-users-arrow-down"></span>
+                            <span data-bind="text:skillGroupName"></span>
+                        </div>
+                        <ul data-bind="foreach: agents" class="agent-list">
+                            <li class="agent-list-item">
+                                <label data-bind="for:agentId, text:agentName"></label>
+                                <input type="checkbox" class="select-agent" data-bind="value:$data,checked: $root.hasSelectedAgents">
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <p class="none-agent-tip" data-bind="visible:!agentEabledSelectLists().length">暂无可选坐席</p>
+            </div>
+            <div class="agent-lists-right">
+                <p class="right-title">已选择坐席
+                    <span class="select-tip" data-bind="visible:currentUser().chatBoxType() == 'custom-chat'">(仅能选择一个坐席，优先选择第一个坐席)</span>
+                </p>
+                <ul data-bind="foreach:hasSelectedAgents">
+                    <li style="margin:0 0 5px 10px">
+                        <span data-bind="text:agentName"></span>
+                        (<span data-bind="text:skillGroupName"></span>)
+                    </li>
+                </ul>
+                <textarea class="leave_words" placeholder="请输入转接留言" data-bind="visible:selectAgentForm().type == 'transfer',textInput: transferMsg"></textarea>
+            </div>
+            <div class="agent-lists-side" data-bind="visible:currentUser().chatBoxType() == 'agent-group'">
+                <p class="right-title">群成员-
+                    <span data-bind="text:currentUser().members.length"></span>
+                </p>
+                <ul data-bind="foreach:currentUser().members">
+                    <li style="margin:0 0 5px 10px">
+                        <span data-bind="text:agentName"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="btns">
+            <button class="cancle_btn" data-bind="click: closeTip.bind($data,'agentSession')">取消</button>
+            <button class="transfer_btn" data-bind="click: $root.confirmAgent">确定</button>
+        </div>
+    </div>
+    <audio id="chat_online_tip" data-bind="attr: {src: onlineTipMusic}"></audio>
+    <audio id="chat_msg_tip" data-bind="attr: {src: msgTipMusic}"></audio>
+
+    <div class="video-place" data-bind="visible: videoPlace">
+        <div data-bind="click: closeVideo" class="close-video">X</div>
+        <div id="videoPlay"></div>
+    </div>
+
+    <div class="im-dialog" data-bind="visible: imPastePicDialog">
+        <div id="im-pastePic-dialog">
+            <div class="im-pastePic-content" id="picDiv"></div>
+            <div class="im-pastePic-footer">
+                <button type="button" id="sendPic" class="im-btn im-btn-info">发送</button>
+                <button type="button"
+                    class="im-btn im-btn-default"
+                    style="color:#000"
+                    data-bind="click:pastePicCancel">取消
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="userList">
+    <div class="chat-user" data-bind="click:$root.selectUser, css: {'selected': $data == $root.currentUser()}">
+
+        <!-- ko if: channel == "weixin" || channel == "weixinim" -->
+        <span class="chat-avatar"
+            data-bind="css:{'chat-avatar-weixin-on': online(), 'chat-avatar-weixin-off': !online(), 'chat-avatar-weixin-timeout1': timeOutBack() == 'yellow',  'chat-avatar-weixin-timeout2': timeOutBack() == 'red'}">
+            <span class="chat-user-msgNumber" data-bind="text: msgNumber, visible: msgNumber()"></span>
+        </span>
+        <!-- /ko -->
+
+        <!-- ko if: channel == "webim" -->
+        <span class="chat-avatar"
+            data-bind="css:{'chat-avatar-webim-on': online(), 'chat-avatar-webim-off': !online(), 'chat-avatar-webim-timeout1': timeOutBack() == 'yellow',  'chat-avatar-webim-timeout2': timeOutBack() == 'red'}">
+            <span class="chat-user-msgNumber" data-bind="text: msgNumber, visible: msgNumber()"></span>
+        </span>
+        <!-- /ko -->
+
+        <!-- ko if: channel == "appim" -->
+        <span class="chat-avatar"
+            data-bind="css:{'chat-avatar-app-on': online(), 'chat-avatar-app-off': !online(),'chat-avatar-app-timeout1': timeOutBack() == 'yellow',  'chat-avatar-app-timeout2': timeOutBack() == 'red'}">
+              <span class="chat-user-msgNumber" data-bind="text:msgNumber, visible: msgNumber()"></span>
+        </span>
+        <!-- /ko -->
+
+        <!-- ko if: channel == "internal-chat" -->
+        <span class="chat-avatar chat-avatar-webim-on">
+            <span class="chat-user-msgNumber" data-bind="text: msgNumber, visible: msgNumber()"></span>
+        </span>
+        <!-- /ko -->
+
+        <div class="chat-user-name">
+            <a href="#">
+                <span data-bind="text: nickName() || visitorInfo().workOrderName()"></span>
+                <span class="chat-user-timing" data-bind="text: timing, visible: !!timing() && online()"></span>
+            </a>
+            <span class="lastMsg" data-bind="html:lastMsg"></span>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="agentLists">
+    <li>
+        <div class="skill-name">
+            <span class="icon chat-users-arrow-down"></span>
+            <span data-bind="text:skillGroupName"></span>
+        </div>
+        <ul data-bind="foreach: agents" class="agent-list">
+            <li class="agent-list-item" data-bind="click:$root.selectAgentChat">
+                <div data-bind="text:agentName"></div>
+                <div>
+                    <span data-bind="text:currentServiceNum"></span>人
+                </div>
+            </li>
+        </ul>
+    </li>
+</script>

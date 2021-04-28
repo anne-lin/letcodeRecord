@@ -1,0 +1,446 @@
+<div class="cchat" id="cchat" style="display: none;">
+    <div>
+        <div class="cchat-triangle"></div>
+    </div>
+    <div class="cchat-header">
+        <ul>
+            <li class="title" data-bind="text:callDurationShow">00:00:00</li>
+            <li class="title callNumber" data-bind="text: callNumber"></li>
+            <li class="title">
+                <i class="fa fa-headphones" style="font-size: 24px;vertical-align: middle" data-bind="click: function(){observe(2)},visible: observeEnabled()"></i>
+            </li>
+        </ul>
+        <!--<span class="title" data-bind="text: callDurationShow">00:00:00</span>-->
+        <!--<span class="title" style="float: right" data-bind="text: callNumber"></span>
+        <!--<span class="title">-->
+            <!--<i class="fa fa-headphones"></i>-->
+        <!--</span>-->
+        <!--<span class="title">电话语音</span>-->
+        <!--<div class="cchat-float-right">-->
+            <!--<button class="command-btn" data-bind="visible: alreadyLogin(), click: logout">-->
+                <!--<span class="dot"></span> 在线-->
+            <!--</button>-->
+            <!--<button class="command-btn" data-bind="visible: !alreadyLogin(), click: login">-->
+                <!--<span class="dot gray"></span> 离线-->
+            <!--</button>-->
+        <!--</div>-->
+    </div>
+    <div class="cchat-dis">
+        <div class="disnumber-outCallType">
+            <div>
+                <input type="radio" name="disnum" value="manualSelect" id="manualSelect" data-bind="checked: outCallType">
+                <label for="manualSelect" class="manualSelectLabel"></label><span>手动选择外显</span>
+            </div>
+            <div>
+                <input type="radio" name="disnum" value="intelSelect" id="intelSelect" data-bind="checked: outCallType">
+                <label for="intelSelect" class="intelSelectLabel"></label><span>智能策略外显</span>
+            </div>
+        </div>
+        <div class="disnumber-container" data-bind="click:toggleNumBox, css: {'outCallTypeCss': outCallTypeCss()}">
+            <p data-bind="html:disNumber">
+                <!--<i class="fa fa-phone" style="vertical-align: middle; color: gray; font-size: 1.5em;"></i>-->
+                <!--<select class="disnumber-select" data-bind="options: outNumbers, value: disNumber"></select>-->
+            </p>
+            <i class="fa fa-sort-desc" data-bind="visible:!isShowNumbox()"></i>
+            <i class="fa fa-sort-asc" style="margin-top: 5px" data-bind="visible:isShowNumbox()"></i>
+        </div>
+        <div class="disnumber-box" data-bind="visible:isShowNumbox()">
+            <div class="disnumber-container" >
+                <i class="fa fa-search"></i>
+                <input type="number" data-bind="textInput:searchNumData,event:{keyup:searchNum}">
+            </div>
+            <ul data-bind="foreach:outNumbers">
+                <li data-bind="click:$parent.chooseOutNum">
+                    <p  data-bind="text:$data.number"></p>
+                    <p  data-bind="text:$data.area"></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="cchat-dial" data-bind="visible: alreadyLogin()">
+
+        <!-- ko if: isBusy() || isReady() || isWorking()-->
+        <div class="number-div">
+            <input type="text" class="number-input" data-bind="textInput: callNumber, hasFocus: numberFocus"/>
+            <span class="backspace" data-bind="click: backspace">
+                <i class="fa fa-backward" style="color: gray;"></i>
+            </span>
+        </div>
+        <div style="margin-top: 5px;">
+            <table class="number-panel" data-bind="click: appendNumber">
+                <tr>
+                    <td><div class="number-btn">1</div></td>
+                    <td><div class="number-btn">2</div></td>
+                    <td><div class="number-btn">3</div></td>
+                </tr>
+                <tr>
+                    <td><div class="number-btn">4</div></td>
+                    <td><div class="number-btn">5</div></td>
+                    <td><div class="number-btn">6</div></td>
+                </tr>
+                <tr>
+                    <td><div class="number-btn">7</div></td>
+                    <td><div class="number-btn">8</div></td>
+                    <td><div class="number-btn">9</div></td>
+                </tr>
+                <tr>
+                    <td><div class="number-btn">*</div></td>
+                    <td><div class="number-btn">0</div></td>
+                    <td><div class="number-btn">#</div></td>
+                </tr>
+            </table>
+            <div class="number-btn call-btn" data-bind="click: makeCall, css: {'disabled': !callEnabled()}">
+                 <div class="btn-fa">
+                     <i class="fa fa-phone"></i>
+                 </div>
+                 <div class="btn-text">拨打</div>
+            </div>
+        </div>
+        <!-- /ko -->
+
+<!--        <div class="number-btn hangup-btn" data-bind="click: makeMultiPersonMeeting, visible: meetingNum() > conferenceNum() && !dialogShow(), css: {'disabled': meetingNum() == maxMeetingNum()}">-->
+<!--            <div class="btn-fa">-->
+<!--                <i class="fa fa-volume-up"></i>-->
+<!--            </div>-->
+<!--            <div class="btn-text">多人会议</div>-->
+<!--        </div>-->
+
+        <div class="number-btn hold-btn" data-bind="click: hold, visible: holdEnabled() && !dialogShow(),css:{'disabled':highLevelCallDisabled}">
+            <div class="btn-fa">
+            <span class="fa-stack fa-hold" style="font-size: 16px;">
+                <i class="fa fa-volume-up fa-stack-2x "></i>
+                <i class="fa fa-circle fa-stack-1x"></i>
+                <i class="fa fa-close fa-stack-1x"></i>
+            </span>
+            </div>
+            <div class="btn-text">保持</div>
+        </div>
+
+        <div class="number-btn hold-btn" data-bind="click: holdReturn, visible: holdReturnEnabled()">
+            <div class="btn-fa">
+                <i class="fa fa-volume-up"></i>
+            </div>
+            <div class="btn-text">保持接回</div>
+        </div>
+
+
+        <div class="number-btn consult-btn" data-bind="click: consult, visible: consultEnabled() && !dialogShow(),css:{'disabled':highLevelCallDisabled}">
+            <div class="btn-fa">
+                <i class="fa fa-comments"></i>
+            </div>
+            <div class="btn-text">咨询</div>
+        </div>
+
+        <div class="number-btn consult-btn" data-bind="click: consultReturn, visible: consultReturnEnabled()">
+            <div class="btn-fa">
+                <span class="fa-stack fa-consultReturn" style="font-size: 16px;">
+                    <i class="fa fa-comments fa-stack-2x "></i>
+                    <i class="fa fa-circle fa-stack-1x"></i>
+                    <i class="fa fa-close fa-stack-1x"></i>
+                </span>
+            </div>
+            <div class="btn-text">咨询接回</div>
+        </div>
+
+        <div class="number-btn transfer-btn" data-bind="click: transfer, visible: transferEnabled()">
+            <div class="btn-fa">
+                <i class="fa fa-mail-forward"></i>
+            </div>
+            <div class="btn-text">转移</div>
+        </div>
+
+
+        <div class="number-btn conference-btn" data-bind="click: conference, visible: conferenceEnabled()">
+            <div class="btn-fa">
+                <i class="fa fa-users"></i>
+            </div>
+            <div class="btn-text">会议</div>
+        </div>
+
+        <div class="number-btn singleTransfer-btn" data-bind="click: singleTransfer, visible: singleTransferEnabled() && !dialogShow(),css:{'disabled':highLevelCallDisabled}">
+            <div class="btn-fa">
+                <i class="fa fa-retweet"></i>
+            </div>
+            <div class="btn-text">单步转移</div>
+        </div>
+
+        <div class="number-btn conference-btn" data-bind="click: singleConference, visible: singleConferenceEnabled() && !dialogShow(),css:{'disabled':highLevelCallDisabled}">
+            <div class="btn-fa">
+                <i class="fa fa-users"></i>
+            </div>
+            <div class="btn-text">单步会议</div>
+        </div>
+
+        <div class="number-btn ivrAssist-btn" data-bind="click: assistIVR, visible: assistIVREnabled() && !dialogShow(),css:{'disabled':highLevelCallDisabled}">
+            <div class="btn-fa">
+                <i class="fa fa-ivr">IVR</i>
+            </div>
+            <div class="btn-text">IVR协助</div>
+        </div>
+
+        <div class="number-btn ivrRouter-btn" data-bind="click: routerToIVR, visible: routerToIVREnabled() && !dialogShow(),css:{'disabled':highLevelCallDisabled}">
+            <div class="btn-fa">
+                <i class="fa fa-ivr">IVR</i>
+            </div>
+            <div class="btn-text">IVR回转</div>
+        </div>
+
+        <div class="number-btn forceInsert-btn" data-bind="click: forceInsert, visible: insertEnabled()">
+            <div class="btn-fa">
+              <span class="fa-stack" style="font-size: 16px;">
+                  <i class="fa fa-phone fa-stack-2x fa-rotate-90"></i>
+                  <i class="fa fa-arrow-up fa-stack-1x"></i>
+              </span>
+            </div>
+            <div class="btn-text">强插</div>
+        </div>
+
+        <div class="number-btn forceAbort-btn" data-bind="click: forceAbort, visible: forceAbortEnabled()">
+            <div class="btn-fa">
+               <span class="fa-stack" style="font-size: 16px;">
+                  <i class="fa fa-phone fa-stack-2x fa-rotate-90"></i>
+                  <i class="fa fa-expand fa-stack-1x fa-rotate-90"></i>
+                </span>
+            </div>
+            <div class="btn-text">强拆</div>
+        </div>
+
+        <div class="number-btn fullAbort-btn" data-bind="click: fullAbort, visible: fullAbortEnabled()">
+            <div class="btn-fa">
+                 <span class="fa-stack fa-fullAbort" style="font-size: 16px;">
+                  <i class="fa fa-phone fa-stack-2x fa-rotate-90"></i>
+                  <i class="fa fa-circle fa-stack-1x"></i>
+                  <i class="fa fa-close fa-stack-1x"></i>
+                </span>
+            </div>
+            <div class="btn-text">全拆</div>
+        </div>
+
+        <div class="number-btn consult-btn" data-bind="click: startCryptolalia, visible: startCryptolaliaEnabled() && !dialogShow()">
+            <div class="btn-fa">
+                <img width="30px" height="30px" src="./WA/images/startCrypto.png" alt="">
+            </div>
+            <div class="btn-text">开启密语</div>
+        </div>
+
+        <div class="number-btn fullAbort-btn" data-bind="click: stopCryptolalia, visible: stopCryptolaliaEnabled() && !dialogShow()">
+            <div class="btn-fa">
+                <img width="30px" height="30px" src="./WA/images/stopCrypto.png" alt="">
+            </div>
+            <div class="btn-text">关闭密语</div>
+        </div>
+
+        <!--            <div class="number-btn consult-btn" data-bind="click: joinConference, visible: joinConferenceEnabled() && !dialogShow() && (meetingNum() != maxMeetingNum())">-->
+        <div class="number-btn consult-btn" data-bind="click: joinConference, visible: joinConferenceEnabled() && !dialogShow(), css:{'disabled': joinConferenceDisabled}">
+            <div class="btn-fa">
+                <i class="fa fa-comments"></i>
+            </div>
+            <div class="btn-text">四方会议</div>
+        </div>
+
+        <div class="number-btn consult-btn" data-bind="click: function(){ setMute(1) },visible: setMuteEnabled() && !dialogShow()">
+            <div class="btn-fa">
+                <i class="fa fa-microphone-slash"></i>
+            </div>
+            <div class="btn-text">静音</div>
+        </div>
+
+        <div class="number-btn consult-btn" data-bind="click: function(){ setMute(0) },visible: stopMuteEnabled() && !dialogShow()">
+            <div class="btn-fa">
+                <i class="fa fa-microphone"></i>
+            </div>
+            <div class="btn-text">关闭静音</div>
+        </div>
+
+        <div class="number-btn ivrRouter-btn" data-bind="click: changeCentre, visible: routerToIVREnabled() && !dialogShow(),css:{'disabled':highLevelCallDisabled}">
+            <div class="btn-fa">
+                <i class="fa fa-share"></i>
+            </div>
+            <div class="btn-text">转中心</div>
+        </div>
+
+<!--        <div class="number-btn hangup-btn" data-bind="click: hangup, visible: (hangupEnabled()|| hangupDisabled()) && !dialogShow() && !isBusy() && !isReady(), css: {'disabled': hangupDisabled(),'display-block': forceAbortEnabled() && insertEnabled()}">-->
+            <div class="number-btn hangup-btn" style="display: block" data-bind="click: hangup, visible: (hangupEnabled()|| hangupDisabled()) && !dialogShow() && !isBusy() && !isReady(), css: {'disabled': hangupDisabled()}">
+            <div class="btn-fa">
+                <i class="fa fa-phone fa-rotate-90"></i>
+            </div>
+            <div class="btn-text">挂机</div>
+        </div>
+
+        <div class="ks-cchat-dialog" data-bind="visible: dialogShow">
+            <div id="ks-choice-dialog" data-bind="visible: choiceDilogShow">
+                <!-- ko if: dialogType() == "consult" || dialogType() == "singleTransfer" || dialogType() == "singleConference" || dialogType() === "joinConference" -->
+                <p>
+                    <input class="chose-item" type="radio" name="radio" value="1" data-bind="click: toggleInside, checked: dialogObj().isChecked"/><span data-bind="text: dialogObj().insideContent"></span>
+                    <input class="chose-item" type="radio" name="radio" value="0" style="margin-left: 10px;" data-bind="checked: dialogObj().isChecked, click: toggleOutside"/><span data-bind="text: dialogObj().outsideContent"></span>
+                    <input class="chose-item" type="radio" name="radio" value="2" style="margin-left: 10px;" data-bind="checked: dialogObj().isChecked, click: toggleOutside"/><span data-bind="text: dialogObj().skillGroupContent"></span>
+                    <!-- ko if: dialogType() == "consult" || dialogType() == "singleConference"-->
+                        <input class="chose-item" type="radio" name="radio" value="4" style="margin-left: 10px;" data-bind="checked: dialogObj().isChecked, click: toggleWorking"/><span data-bind="text: dialogObj().workingContent"></span>
+                    <!-- /ko -->
+
+                </p>
+                <div data-bind="visible: dialogObj().isChecked() == '0'">
+                    <div style="text-align: left;" data-bind="text: dialogObj().inputTitle"></div>
+                    <div>
+                        <input type="text" style="width: 100%;margin: 4px 0px;"  data-bind="textInput:dialogObj().toAgent"/>
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <!-- ko if: dialogType() == "observe" -->
+                <p>
+                    <input class="chose-item" type="radio" name="radio" value="1" data-bind="checked: dialogObj().isChecked,click:toggleDialogTitle"/><span data-bind="text: dialogObj().observe"></span>
+                    <input class="chose-item" type="radio" name="radio" value="0" style="margin-left: 10px;" data-bind="checked: dialogObj().isChecked,click:toggleDialogTitle"/><span data-bind="text: dialogObj().intercept"></span>
+                </p>
+                <!-- /ko -->
+
+                <!-- ko if: dialogType() == "consult" || dialogType() == "singleTransfer" || dialogType() == "singleConference" || dialogType() == "observe" || dialogType() === "joinConference" -->
+                <div class="ks-list" data-bind="visible: dialogObj().isChecked() == '1' || dialogObj().isChecked() == '4' || dialogObj().handleName == 'observe'">
+                    <table data-bind="foreach: agentList">
+                        <tr data-bind="click: $parent.selectAgent, css:{selectedItem: $parent.dialogObj().toAgent() == agentId}">
+                            <td data-bind="text: agentName"></td>
+                            <td data-bind="text: agentId"></td>
+                        </tr>
+                    </table>
+                    <p data-bind="visible: !agentList().length" style="margin: 0px;line-height: 100px;">没有可<span data-bind="text: dialogObj().title"></span></p>
+                </div>
+                <div class="ks-list" data-bind="visible: dialogObj().isChecked() == '2'">
+                    <table data-bind="foreach: skillList">
+                        <tr data-bind="click: $parent.selectSkill, css:{selectedItem: $parent.dialogObj().toAgent() == skillName}">
+                            <td data-bind="text: skillName"></td>
+                        </tr>
+                    </table>
+                    <p data-bind="visible: !agentList().length" style="margin: 0px;line-height: 100px;">没有可用技能组</span></p>
+                </div>
+                <!-- /ko -->
+
+                <!-- ko if: dialogType() == "changeCentre" -->
+                <div>
+                    <div class="ks-ivr-title">请输入提供给其他中心坐席的留言</div>
+                    <div class="ks-list ks-ivr-list">
+                        <textarea class="ks-centre-input" rows="3" cols="27" data-bind="textInput:centreDialogObj().text" />
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <!-- ko if: (dialogType() == "assistIVR" || dialogType() == "routerToIVR" ) &&  !ivrObjExit()-->
+                <div>
+                    <div class="ks-ivr-title">IVR节点</div>
+                    <div class="ks-list ks-ivr-list">
+                        <table data-bind="foreach: ivrNodeList">
+                            <tr data-bind="click: $parent.selectIvrNode, css:{selectedItem: $parent.ivrDialogObj().toIvrNode() == $data}">
+                                <td data-bind="text: value"></td>
+                            </tr>
+                        </table>
+                        <p data-bind="visible: !ivrNodeList().length" style="margin: 0px;line-height: 100px;">没有可选择节点</p>
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <!-- ko if: dialogType() == "assistIVR" && ivrObjExit()-->
+
+                <div class="ivrInput">
+                    <input type="text" maxlength="22" class="qn-input" data-bind="textInput: ivrAssistsCardId" placeholder="请输入卡号或身份证号"/>
+                    <p data-bind="text:checkIvrCard"></p>
+                    <div class="ks-dialog-btns">
+                        <button type="button" class="ks-dialog-ok" data-bind="css:{ksBtnDisabled: ivrCardBtnDisabled}">确定</button>
+                    </div>
+                    <div><span data-bind="click:ivrAssistsDirectHelp">直接申请协助</span></div>
+                </div>
+
+                <!-- /ko -->
+
+                <!-- ko if: !(dialogType() == "assistIVR" && ivrObjExit())-->
+                <div class="ks-dialog-btns">
+                    <button type="button" class="ks-dialog-ok" data-bind="css:{ksBtnDisabled: dialogBtnDisabled}">确定</button>
+                    <button type="button" class="ks-dialog-cancle">取消</button>
+                </div>
+                <!-- /ko -->
+
+            </div>
+            <div id="ivr-confirm-dialog" data-bind="visible: ivrConfirmDialogShow">
+                <div id="ks-ivr-load" data-bind="visible: ivrConfirmDialogResult() == 'load'">
+                    <div class="text">
+                        <div class="vir-node" data-bind="text: ivrDialogObj().toIvrNode() && ivrDialogObj().toIvrNode().value"></div>
+                        <span style="padding-left: 24px">正在协助</span>
+                         <span class="load">
+                            <span>.</span>
+                            <span>.</span>
+                            <span>.</span>
+                         </span>
+                    </div>
+
+                    <div class="ks-dialog-btns">
+                        <button type="button" class="ks-dialog-ivr-cancle next-btn">取消协助</button>
+                    </div>
+                </div>
+
+                <div id="ks-ivr-success" data-bind="visible: ivrConfirmDialogResult() == 'success'">
+                    <div class="text">
+                        <div class="icon"></div>
+                        <span>协助成功</span>
+                    </div>
+                    <div class="ks-dialog-btns">
+                        <button type="button" class="ks-dialog-ivr-return next-btn">返回</button>
+                    </div>
+                </div>
+
+                <div id="ks-ivr-fail" data-bind="visible: ivrConfirmDialogResult() == 'fail'">
+                    <div class="text">
+                        <div class="icon"></div>
+                        <span>协助失败</span>
+                    </div>
+                    <div class="ks-dialog-btns">
+                        <button type="button" class="ks-dialog-ivr-return next-btn">返回</button>
+                    </div>
+                </div>
+
+                <div id="ks-ivr-timeout" data-bind="visible: ivrConfirmDialogResult() == 'timeout'">
+                    <div class="text">
+                        <div class="icon"></div>
+                        <span>协助超时</span>
+                    </div>
+                    <div class="ks-dialog-btns">
+                        <button type="button" class="ks-dialog-ivr-return next-btn">返回</button>
+                    </div>
+                </div>
+
+                <div id="ks-ivr-error" data-bind="visible: ivrConfirmDialogResult() == 'error'">
+                    <div class="text">
+                        <div class="icon"></div>
+                        <span>协助异常</span>
+                    </div>
+                    <div class="ks-dialog-btns">
+                        <button type="button" class="ks-dialog-ivr-return next-btn">返回</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 15px;" data-bind="click: setBusy, visible: isAcw()">
+            <span class="next-btn">准备接听下个电话</span>
+        </div>
+    </div>
+    <video id="belling-ring" style="display: none"></video>
+    <audio data-bind="src:hangupUrl()" id="hangup"></audio>
+</div>
+<div id="WA-ringing">
+    <div class="qn-ringing" data-bind="visible: operBoxDisplay">
+        <div class="ringingCaption">
+            <div class="ringingState">
+                <span data-bind="text: stateShow"></span>
+                <span data-bind="text: callDurationShow"></span>
+            </div>
+           <!--  <div class="ringingAutoAnswer">
+                <input type="checkbox" id="autoAnswer" data-bind="checked: autoAnswer, event:{change: setAutoAnswer}">
+                <label for="autoAnswer">自动接听</label>
+            </div> -->
+            <div data-bind="html:callInTip"></div>
+            <div class="close" data-bind="click: closeOperBox">&times;</div>
+        </div>
+        <div class="ringingBtnGroup">
+            <button type="button" data-bind="click: answerVerto, css:{'answered': !answered()}, disable: !answered()" class="answer">接听</button>
+            <button type="button" data-bind="click: hangupVerto">挂断</button>
+        </div>
+    </div >
+</div>
