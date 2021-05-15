@@ -1,0 +1,68 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+</head>
+<body>
+<div>
+  
+</div>
+</body>
+<script>
+  const data={
+    name:"yinghan",
+    obj:{
+      name:"wentao",
+      age:18
+    },
+    arr:[1,2,3,4]
+  }
+
+  let oldArrayProperty = Array.prototype;
+  const arrProto = Object.create(oldArrayProperty);
+  ["push","pop","shift"].forEach(methodName=>{
+    arrProto[methodName]=function(){
+      updateView();
+
+      [][methodName].call(this,...arguments);
+    }
+  })
+
+  function observer(target){
+    if(typeof target !== "object" || target == null){
+      return target;
+    }
+
+    if(Array.isArray(target)){
+      target.__proto__=arrProto;
+    }
+    for(let key in target){
+      defineReactive(target,key,target[key])
+    }
+  }
+
+  function defineReactive(target,key,value){
+    if(Array.isArray(value)){
+      value.__proto__=arrProto;
+    }
+    Object.defineProperty(target,key,{
+      get(){
+        return value;
+      },
+      set(newValue){
+        updateView();        
+        if(newValue !== value){
+          observer(newValue);
+          value = newValue;
+        }
+      }
+    })
+  }
+  function updateView(){
+    console.log("视图更新")
+  }
+
+  observer(data);
+</script>
+</html>

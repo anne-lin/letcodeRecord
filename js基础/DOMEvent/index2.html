@@ -30,11 +30,14 @@
     //},true);
 
     document.body.addEventListener("click",function(){
+        event.stopPropagation();
+
         console.log("body");
     },false)
     //},true)
 
-    ev.addEventListener("click",function(){
+    ev.addEventListener("click",function(event){
+        event.stopPropagation();
         console.log("ev");
     },false)
     //},true)
