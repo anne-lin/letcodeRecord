@@ -13,6 +13,10 @@ const routes = [
       {
         path:"/",
         redirect:"/dashboard/analysis"
+      },{
+          path: "/cart",
+          name: "cart",
+          component: () =>import(/* webpackChunkName: "dashboard" */ "../views/Cart/Cart.vue"),
       },
       {
         path: "/dashboard",
