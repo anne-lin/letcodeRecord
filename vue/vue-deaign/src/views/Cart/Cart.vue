@@ -16,7 +16,7 @@ export default {
   },
   data() {
      return {
-       goodsList:[{
+       goodsList:[{ 
           id:"1",
           name:"haha1",
           price:18,

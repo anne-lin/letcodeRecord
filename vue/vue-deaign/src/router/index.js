@@ -17,6 +17,10 @@ const routes = [
           path: "/cart",
           name: "cart",
           component: () =>import(/* webpackChunkName: "dashboard" */ "../views/Cart/Cart.vue"),
+      },{
+          path: "/cartVuex",
+          name: "cartVuex",
+          component: () =>import(/* webpackChunkName: "dashboard" */ "../views/Cart/CartVuex.vue"),
       },
       {
         path: "/dashboard",
