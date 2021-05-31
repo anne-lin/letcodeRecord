@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="http://localhost:8087/socket.io/socket.io.js" charset="utf-8"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .box{
+            margin: 30px auto;
+            width: 500px;
+            height: 500px;
+            border: 1px solid #303030;
+        }
+        ul{
+            height: 71%;
+            width: 100%;
+            border-bottom: 1px solid #303030;
+            overflow-y: auto;
+        }
+        li{
+            margin: 20px;
+            list-style: none;
+            clear: both;
+            overflow: hidden;
+        }
+        li>p{
+            padding: 5px;
+            max-width: 300px;
+            height: auto;
+            display: inline-block;
+            background-color: aquamarine;
+            border: 1px solid aquamarine;
+            border-radius: 6px;
+        }
+        .send{
+            float: right;
+            background-color: coral;
+            border: 1px solid coral;
+        }
+        textarea{
+            height: 100px;
+            width: 500px;
+            border-top: none;
+        }
+        button{
+            text-align: center;
+            background-color: dodgerblue;
+            color: #f5f5f5;
+            border: 1px solid dodgerblue;
+        }
+        .sendBtn{
+            position: absolute;
+            right: 10px;
+            top:105px;
+            width: 50px;
+            height: 30px;
+            border-radius: 4px;
+        }
+        #upload{
+            margin: 10px 15px;
+            width: 59px;
+            height: 25px;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <ul id="msgList"></ul>
+    <div style="position: relative">
+        <div>
+            <button id="upload">上传文件</button>
+            <input type="file" name="f1" style="display: none" id="f1">
+        </div>
+        <textarea name="" id="" cols="30" rows="10"></textarea>
+        <button onclick="sendMsg()" class="sendBtn">发送</button>
+    </div>
+</div>
+<script>
+    function render(direction,msg) {
+        $("#msgList").append(`<li><p class="${direction == 'req' ? 'send':''}">${msg}</p></li>`);
+        $("#msgList")[0].scrollTop=$("#msgList")[0].scrollHeight;
+    }
+    function sendMsg() {
+        render("req",$("textarea").val());
+        sock.emit("sendMsg",$("textarea").val());
+        $("textarea").val("");
+    }
+    let sock=io.connect('ws://localhost:8087/');
+
+    sock.on("msgList",(res)=>{
+        console.log(res);
+        if(!res){
+            return;
+        }
+        let data1=res.replace(/\}\{/g,"}${");
+        let data=data1.split("$");
+        if(data.length){
+            data.forEach((item)=>{
+                console.log(item);
+                let tmp=JSON.parse(item);
+                render(tmp.direction,tmp.msg);
+            });
+        }
+    });
+    sock.on("getMsg",(res)=>{
+        render("res",res);
+    });
+
+    $("#upload").click(function () {
+        $('input[name="f1"]').trigger("click");
+    });
+    $('input[name="f1"]').on('change', function (){
+        let formdata=new FormData();
+
+        formdata.append('f1', document.querySelector('#f1').files[0]);
+        formdata.append('name', "yinghan");
+
+        $.ajax({
+            url: "http://localhost:8089/upload",
+            type: "post",
+            data: formdata,
+            processData: false,
+            contentType: false,
+            dataType: 'json'
+        }).then(res=>{
+            alert('成功');
+            console.log(typeof res);
+            render("req",res.data.fileName);
+        }, res=>{
+            alert('失败');
+        });
+    });
+</script>
+</body>
+</html>

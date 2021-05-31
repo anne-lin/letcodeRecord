@@ -1,0 +1,20 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+</head>
+<body> 
+  父级：A页面<br/><br/>
+  <button id="children_button">传值给子元素 </button>
+  <iframe src="./b.html" width="500px" height="200px" id="iframe"></iframe> 
+  <script> 
+      let iframe = document.getElementById('iframe');
+      document.getElementById("children_button").onclick = function(){ 
+        var param = {'age':'10'};
+        iframe.contentWindow.postMessage(param,'*');
+    }         
+  </script> 
+</body>
+<script></script>
+</html>

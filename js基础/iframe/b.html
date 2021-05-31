@@ -1,0 +1,17 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+</head>
+<body> 
+  子级：B页面<br/>
+  <button id="b_button">B页面发送A页面数据</button><br/> 
+  <script> 
+    window.addEventListener('message', function(e) {
+        document.getElementById("b_button").innerHTML=JSON.stringify(e.data);
+        alert(JSON.stringify(e.data));
+    })
+  </script>
+</body>
+</html>

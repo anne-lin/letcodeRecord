@@ -1,0 +1,38 @@
+{
+  "name": "attendance_qn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "serve.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node serve.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anne-lin/Attendance_QN.git"
+  },
+  "keywords": [
+    "node",
+    "koa2"
+  ],
+  "author": "linyh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anne-lin/Attendance_QN/issues"
+  },
+  "homepage": "https://github.com/anne-lin/Attendance_QN#readme",
+  "devDependencies": {
+    "koa": "^2.6.1",
+    "koa-better-body": "^3.0.4",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "koa2-cors": "^2.0.6",
+    "koa-bodyparser": "^4.2.1",
+    "koa-body": "^4.1.1",
+    "koa-session": "^5.12.3"
+  },
+  "dependencies": {
+    "properties-to-json": "^0.1.4",
+    "superagent": "^5.1.2"
+  }
+}

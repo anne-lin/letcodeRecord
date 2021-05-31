@@ -1,0 +1,15 @@
+客+现网：
+      网址：http://0103290014.desk.ccod.com:8080/login
+      账号：linyh/000000	可用分机：18310508063/sip：25781004
+      多渠道登入账号："entId":"0103290014","agentId":"7432","agentPassword":"000000","agentNumber":"tel:18310508063"
+
+wa现网：
+	网址：http://open.ccod.com:20000/WAEX/WA-index.html
+	账号：同上
+
+平安门户UI账号：
+	https://pro.modao.cc/app/VyEm2FtpCmJYRUxBuR3JzvxvURo3Cpw
+	20181204
+查看测试发布版本地址：
+	http://10.130.41.160:8080/octupus/edition/index
+	admin qcteam2016

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        #box{
+            margin: 50px auto;
+            padding: 20px;
+            width: 300px;
+            height: 170px;
+            border: 1px solid black;
+        }
+        #box>div:first-of-type{
+            margin: 20px 0;
+        }
+        label{
+            display: inline-block;
+            width: 70px;
+            text-align: end;
+        }
+        .title{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+     <div id="box">
+         <p class="title">登录</p>
+         <div>
+             <div>
+                 <label for="">用户名：</label>
+                 <input type="text" name="username">
+             </div>
+             <div>
+                 <label for="">密码：</label>
+                 <input type="password" name="pwd">
+             </div>
+         </div>
+         <div style="text-align: right">
+             <button id="login-btn">登录</button>
+             <button id="changeModel">注册</button>
+         </div>
+     </div>
+     <script>
+         $("#changeModel").click(()=>{
+             if($(".title").html() == "登录"){
+                 $(".title").html("注册");
+                 $("#login-btn").html("注册");
+                 $("#changeModel").html("登录");
+             }else {
+                 $(".title").html("登录");
+                 $("#login-btn").html("登录");
+                 $("#changeModel").html("注册");
+             }
+         });
+         $("#login-btn").click(()=>{
+             let url=$(".title").html() == "登录" ? "http://localhost:8089/login":"http://localhost:8089/reg";
+             $.ajax({
+                 url: url,
+                 method:"post",
+                 data: {
+                     username:$("#box input[name='username']").val(),
+                     password:$("#box input[name='pwd']").val()
+                 },
+                 dataType: 'json'
+             }).then(res=>{
+                 alert(res.desc)
+             },err=>{
+                 console.log("获取数据出错");
+             })
+         });
+     </script>
+</body>
+</html>

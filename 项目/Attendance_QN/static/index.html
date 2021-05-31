@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>考勤数据整理</title>
+    <link rel="stylesheet" href="lib/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="lib/css/bootstrap.min.css">
+    <script src="lib/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="lib/js/bootstrap-datepicker.js"></script>
+    <script src="lib/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+<div class="searchBox">
+    <label for="number">员工编号</label>
+    <input type="text" value="" id="number" class="form-control">
+
+    <label>时间选择</label>
+    <div class="input-group date form_datetime col-md-5">
+        <input class="form-control" size="16" type="text" value="" name="start" autocomplete="off">
+        <span>-</span>
+        <input type="text" class="form-control" name="end" autocomplete="off">
+    </div>
+
+    <button type="button" class="btn btn-success">查询</button>
+</div>
+<ul id="dataShow">
+    <li>
+        <div>姓名</div>
+        <div>日期</div>
+        <div>时间</div>
+        <div>星期</div>
+        <div>打开方式</div>
+    </li>
+</ul>
+<script>
+    let initDateSet={
+        weekStart: 0, //一周从哪一天开始
+        endDate:new Date(),
+        format:"yyyy-MM-dd",
+        autoclose:true,
+        language:"cn"
+    };
+    $('.form_datetime input[name="start"]').datepicker({...initDateSet});
+    $('.form_datetime input[name="end"]').datepicker({...initDateSet});
+
+    $(".btn-success").click(()=>{
+        let number=$("#number").val();
+        let startDate=filterDate($("input[name='start']").val());
+        let endDate=filterDate($("input[name='end']").val());
+        if(!(/^\d+$/.test(number) && startDate && endDate)){
+            alert("输入有误，请重新填写")
+        }else {
+            searchDate({
+                number,startDate,endDate
+            });
+        }
+    });
+    function filterDate(date){
+        let arr=date.split("-");
+        arr[1]=arr[1].length == 1 ? "0"+arr[1]:arr[1];
+        arr[2]=arr[2].length == 1 ? "0"+arr[2]:arr[2];
+        return arr.join("-");
+    }
+    async function searchDate(data){
+        let result=await fetch(`${window.location.origin}/fetchData`,{
+            method:"POST",
+            body:JSON.stringify(data)
+        });
+        if(!result.ok){
+             alert("输入有误，查询失败");
+             return false;
+        }
+        let res=await result.json();
+        res=res.list.reduce((pre,cur,index)=>{
+            if(index==1){
+                pre=template(pre[1],pre[2][0],pre[2][1],pre[5],pre[6],pre[7]);
+            }
+            return pre + template(cur[1],cur[2][0],cur[2][1],cur[5],cur[6],cur[7]);
+        });
+        $("#dataShow").html(template("姓名","日期","时间","星期","打开方式")+res);
+        //console.log(res);
+    }
+    function template(name,date,time,day,action,isOverTime) {
+        let pre;
+        if(isOverTime){
+            pre=`<li class="overWork">`
+        }else {
+            pre='<li>'
+        }
+        return `${pre}<div>${name}</div>
+                    <div>${date}</div>
+                    <div>${time}</div>
+                    <div>${day}</div>
+                    <div>${action}</div></li>`
+    }
+</script>
+</body>
+</html>
