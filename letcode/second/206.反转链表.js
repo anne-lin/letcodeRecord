@@ -24,16 +24,17 @@ var reverseList = function(head) {
     head.next.next = head;
     head.next = null;
     return next; */
+  
 
-    let pre=null,
-    cur=head;
-    while(cur){
-      let next=cur.next;
-      cur.next=pre;
-      pre=cur;
-      cur=next;
-    }
-    return pre;
+  let pre = null,
+    cur = head;
+  while (cur) {
+    let next = cur.next;
+    cur.next = pre;
+    pre = cur;
+    cur = next;
+  }
+  return pre;
 };
 // @lc code=end
 

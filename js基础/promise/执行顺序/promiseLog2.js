@@ -23,4 +23,10 @@ new Promise(function(res){
     console.log("promise2");
 });
 console.log("script end");
+//script start,async1 start,async2,promise1,promise3,script end,async1 end,promise2,async return,setTimeout
+
+
+
+
+
 //start,asy1 start,asy2,pro1,pro3,end,sasy1 end,pro2,async return,setTime

@@ -27,3 +27,6 @@ var promise = new Promise(function(resolve, reject){
   });
  
   //b 2 c 1 a 2
+
+
+  //c,1,a,2,b,2
