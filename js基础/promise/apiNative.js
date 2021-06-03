@@ -1,5 +1,5 @@
 //传入一个带promise方法的数组，数组内的方法全部执行成功才返回事件
-Promise.prototype.all = function (list) {
+Promise.all = function (list) {
     if (!Array.isArray(list)) {
         throw Error("arguments must be array");
         return;
@@ -8,8 +8,9 @@ Promise.prototype.all = function (list) {
         let len = list.length, resArr = [];
         for (let i = 0; i < list.length; i++){
             list[i].then((data) => {
-                resArr.push(data);
-                if (resArr.length == len) {
+                resArr[i]=data;
+                len--
+                if (len === 0) {
                     resolve(resArr);
                 }
             }).catch(e => {
@@ -19,7 +20,7 @@ Promise.prototype.all = function (list) {
     })
 }
 //传入一个带promise方法的数组，数组内的方法全部执行（不管失败与否）返回事件
-Promise.prototype.allSetter = function (list) {
+Promise.allSetter = function (list) {
     if (!Array.isArray(list)) {
         throw Error("arguments must be array");
         return;

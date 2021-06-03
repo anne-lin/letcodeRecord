@@ -1,0 +1,88 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+</head>
+<style>
+    #local-video,
+    #record-video{
+        width: 500px;
+        border: 1px solid black;
+    }
+</style>
+<body>
+<div>
+    <video id="local-video" autoplay></video>
+    <video id="record-video"></video>
+    <button id="record">record</button>
+    <button id="download">download</button>
+    <button id="recplay">recplay</button>
+</div>
+</body>
+<script type="module">
+    import RTC from "./record.js";
+    let rtc=new RTC();
+    let streamData={
+        buffer:[]
+    }
+    rtc.getUserMedia({
+        video:true,
+        audio:true
+    }).then(stream=>{
+        var video=document.getElementById("local-video");
+        video.srcObject=stream;
+        streamData.stream=stream;
+    }).catch(e=>{
+        console.log(e);
+    })
+
+    document.getElementById("record").onclick=startRecord;
+    document.getElementById("recplay").onclick=recordVideo;
+    document.getElementById("download").onclick=download;
+    function recordVideo(){
+        var blob=new Blob(streamData.buffer,{
+            type:"video/webm"
+        }),
+        video=document.getElementById("record-video");
+        video.src=window.URL.createObjectURL(blob);
+        video.controls=true; 
+    }
+    function download(){
+        var blob = new Blob(streamData.buffer, {type: 'video/webm'});
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+
+        a.href = url;
+        a.style.display = 'none';
+        a.download = 'aaa.webm';
+        a.click();
+    }
+    function startRecord(){
+        streamData.buffer=[];
+        var options={
+            mimeType:"video/webm;codecs=vp8"
+        },mediaRecorder;
+        if(!MediaRecorder.isTypeSupported(options.mimeType)){
+            console.log("not support record");
+            return;
+        }
+        try{
+            mediaRecorder=new MediaRecorder(streamData.stream,options);
+        }catch(e){
+            console.error("e:",e);
+            return;
+        }
+        mediaRecorder.ondataavailable=function (e){
+            if(e && e.data && e.data.size > 0){
+                streamData.buffer.push(e.data);
+            }
+        }
+        mediaRecorder.start(10);
+        setTimeout(()=>{
+            console.log("停止录制");
+            mediaRecorder.stop();
+        },60000);
+    }
+</script>
+</html>

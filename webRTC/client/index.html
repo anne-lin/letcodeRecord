@@ -1,0 +1,55 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+<title>webRTC client</title>
+<style>
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  .video-content{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .localVideo-box,
+  .remoteVideo-box{
+    display: flex;
+    align-items: center;
+    margin: 30px 10px;
+    width: 534px;
+    height: 300px;
+    border: 1px solid black;
+    overflow: hidden;
+  }
+  #localVideo,
+  #remoteVideo{
+    width: 100%;
+    object-fit: fill;
+  }
+</style>
+</head>
+<body>
+    <div class="video-content">
+      <div class="localVideo-box">
+        <video id="localVideo" autoplay playsinline poster="./img/img1.jpg"></video>
+      </div>
+      <div class="remoteVideo-box">
+        <video id="remoteVideo" autoplay playsinline poster="./img/img2.jpg"></video>
+      </div>
+    </div>    
+    <div style="text-align: center;">
+      <input type="text" id="roomName">
+      <button id="startButton">进入房间</button>
+      <button id="callButton">呼叫</button>
+      <button id="hangupButton">挂断</button>
+    </div>
+
+</body>
+<script src="https://webrtc.github.io/adapter/adapter-latest.js" ></script>
+<script src="./lib/socket.io.js"></script>
+<script src="./js/client.js"></script>
+</html>
