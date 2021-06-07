@@ -35,6 +35,7 @@ var reverseList = function(head) {
     cur = next;
   }
   return pre;
+
 };
 // @lc code=end
 

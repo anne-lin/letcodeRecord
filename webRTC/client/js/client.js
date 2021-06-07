@@ -1,4 +1,5 @@
 var socket;
+
 function initSocket(room){
   var isInitiator;
 
@@ -24,12 +25,12 @@ function initSocket(room){
       rtc.saveRemoteSdp(sdp);
     }else{
       //rtc=new RTC(sdp);
+      rtc=new RTC();
       direction="answer";
       mediaBox.getLocalMediaStream({
         video:true,
         audio:false
       }).then((steram)=>{
-        rtc=new RTC();
         rtc.answer(sdp,steram);
       })
     }
@@ -51,6 +52,7 @@ function initSocket(room){
     console.log.apply(console, array);
   });
 }
+
 class RTC{
   constructor(){
     this.peerConnection=new RTCPeerConnection({
@@ -80,7 +82,10 @@ class RTC{
   }
   
   localDescCreated(desc){
-    this.peerConnection.setLocalDescription(desc, ()=>{
+    this.peerConnection.setLocalDescription(desc, () => {
+      // if (direction = "answer") {
+      //   bindWidth(500);
+      // }
       socket.emit("sdp",this.peerConnection.localDescription);
     },this.onError);
   }  
@@ -99,7 +104,7 @@ class RTC{
     this.peerConnection.addStream(mediaStream);
     this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdp), ()=>{
       this.peerConnection.createAnswer()
-        .then((sdp)=>{
+        .then((sdp) => {
           this.localDescCreated(sdp);
         })
         .catch(this.onError);
@@ -108,6 +113,7 @@ class RTC{
   saveRemoteSdp(sdp){
     this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdp), function(){
       console.log("save remote sdp success");
+      setBindWidth(1000);
     },this.onError);
   }
   hangup=()=>{
@@ -123,6 +129,7 @@ class RTC{
     console.log(e);
   }
 }
+
 function handleMedia(){
   this.localStream;
   this.getLocalMediaStream=function(constraints){
@@ -148,19 +155,23 @@ function handleMedia(){
     }
   }
 }
+
 const localVideo = document.getElementById('localVideo');
 const remoteVideo = document.getElementById('remoteVideo');
 const startButton = document.getElementById('startButton');
 const callButton = document.getElementById('callButton');
 const hangupButton = document.getElementById('hangupButton');
 const roomName = document.getElementById('roomName');
-let rtc,direction,mediaBox;
+const bindWidthChange = document.getElementById('bindWidthChange');
+let rtc, direction, mediaBox;
+
 mediaBox =new handleMedia();
 startButton.onclick = function(){
   if(roomName.value){
     initSocket(roomName.value);
   }
 }
+
 callButton.onclick = function(){
   direction="call";
   mediaBox.getLocalMediaStream({
@@ -176,4 +187,32 @@ hangupButton.onclick = function(){
   mediaBox.stopMedia();
   rtc.hangup();
   socket.emit("hangup");
+}
+
+function setBindWidth(bindWidth) {
+  let vsender = null,
+  senders = rtc.peerConnection.getSenders();
+  console.log("senders:",senders);
+  senders.forEach(sender => {
+    if (sender && sender.track.kind === "video") {
+      vsender = sender;
+    }
+  });
+ 
+console.log("vsender:",vsender);
+let parameters = vsender.getParameters();
+if (!parameters.encodings) {
+  return;
+}
+console.log("parameters:",parameters);
+
+parameters.encodings[0].maxBitrate = bindWidth * 1000;
+
+vsender.setParameters(parameters).then(() => {
+  console.log("设置字节成功")
+})
+}
+//控制视频流字节大小
+bindWidthChange.onclick = function () {
+  setBindWidth(500);
 }

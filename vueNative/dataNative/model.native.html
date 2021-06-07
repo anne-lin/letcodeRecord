@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<div id="app">
+    <input type="text" v-model="age">
+    <p>{{name}}</p>
+    <p>{{age}}</p>
+</div>
+<script>
+   class Vue{
+       constructor(data){
+           let that=this;
+           if(!data.el || data.el[0] != "#"){
+               console.log("请选择绑定元素id");
+               return;
+           }
+           this.el=document.getElementById(data.el.slice(1));
+           this.input=document.getElementsByTagName("input");
+           this.template=this.el.innerHTML;
+           this.data=new Proxy(data.data,{
+               set(obj,name,val){
+                   obj[name]=val;
+                   that.render();
+                   return true;
+               }
+           });
+           this.render();
+       }
+       render(){
+           let {data,template,el,input}=this;
+           el.innerHTML=template.replace(/\{\{\w+\}\}/g,function (str) {
+               return data[str.slice(2,str.length-2)]
+           });
+           Array.from(input).filter(item=>item.getAttribute("v-model")).forEach(item=>{
+               let name=item.getAttribute("v-model");
+               item.value=data[name];
+               item.oninput=function () {
+                   data[name]=this.value;
+               }
+           })
+       }
+   }
+
+   let vm=new Vue({
+        el:"#app",
+        data:{
+            name:"linyh",
+            age:18
+        }
+    });
+</script>
+</body>
+</html>

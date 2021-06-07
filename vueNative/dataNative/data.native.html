@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue data实现</title>
+</head>
+<body>
+<div id="app">
+    <p>name:{{name}}</p>
+    <p>age:{{age}}</p>
+</div>
+<script>
+    let el=document.getElementById("app");
+
+    let template=el.innerHTML;
+    let _data={
+        name:"linyh",
+        age:18
+    };
+    render();
+    let data=new Proxy(_data,{
+        set:function (obj,name,val) {
+            obj[name]=val;
+            render();
+        }
+    });
+
+    setTimeout(function () {
+        data.name="wentao"
+    },1000);
+
+    function render(){
+        el.innerHTML=template.replace(/\{\{\w+\}\}/g,function (val) {
+            return _data[val.slice(2,val.length-2)];
+        })
+    }
+</script>
+</body>
+</html>
