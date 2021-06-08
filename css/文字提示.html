@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>鼠标悬浮文字提示</title>
+    <style>
+        .content {
+            position: relative;
+            width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer; }
+
+        .detail {
+            display: none;
+            position: absolute;
+            top: 47px;
+            left: 7px;
+            width: 200px;
+            font-size: 14px;
+            font-weight: normal;
+            height: auto;
+            color: white;
+            background-color: #87CEFA;
+            border: 1px solid #87CEFA;
+            border-radius: 4px; }
+
+        .box:hover .detail {
+            display: block; }
+
+        .detail:before {
+            position: absolute;
+            left: 65px;
+            top: -10px;
+            content: " ";
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-bottom: 10px solid #87CEFA;
+            border-top: 0; }
+
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <p class="content">哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈</p>
+        <div class="detail">哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈</div>
+    </div>
+
+</body>
+</html>

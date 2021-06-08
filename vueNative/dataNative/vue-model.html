@@ -1,0 +1,53 @@
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge'>
+<meta name='viewport' content='width=device-width,initial-scale=1.0'>
+</head>
+<body>
+<div id="app">
+    <input type="text" v-model="age">
+    <div>age:{{age}}</div>
+    <div>name:{{name}}</div>
+</div>
+</body>
+<script>
+    class Vue{
+        constructor(data){
+            this.el=document.getElementById(data.el.slice(1));
+            this.input=document.getElementsByTagName("input");
+            this.template=this.el.innerHTML;
+            let that=this;
+            this.data=new Proxy(data.data,{
+                set(obj,key,value){
+                    obj[key]=value;
+                    that.render();
+                    return true;
+                }
+            });            
+            this.render();
+        }
+        render() {
+            let {data}=this;
+            this.el.innerHTML=this.template.replace(/\{\{\w+\}\}/g,(str)=>{
+                return data[str.slice(2,str.length-2)]
+            });
+            Array.from(this.input).filter(item=>item.getAttribute("v-model")).forEach((item)=>{
+                let name=item.getAttribute("v-model");
+                item.value=data[name];
+                item.onchange=function(){
+                    console.log(this.value);
+                    data[name]=this.value;
+                }
+            })
+        }
+    }
+    let app=new Vue({
+        el:"#app",
+        data:{
+            age:18,
+            name:"yinghan"
+        }
+    })
+</script>
+</html>

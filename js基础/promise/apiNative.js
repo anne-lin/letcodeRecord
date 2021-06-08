@@ -5,12 +5,14 @@ Promise.all = function (list) {
         return;
     }
     return new Promise((resolve, reject) => {
-        let len = list.length, resArr = [];
+        let len = list.length, resArr = [],count=0;
         for (let i = 0; i < list.length; i++){
-            list[i].then((data) => {
-                resArr[i]=data;
-                len--
-                if (len === 0) {
+            //使用Promise.resolve是为了预防部分数组元素不是promise对象
+            Promise.resolve(list[i]).then((data) => {
+                //使用resArr[i]赋值是因为数据的回调顺序可能不一样，为保证返回值顺序一致
+                resArr[i] = data;
+                count++;
+                if (count == len) {
                     resolve(resArr);
                 }
             }).catch(e => {

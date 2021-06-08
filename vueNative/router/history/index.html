@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>history router</title>
+</head>
+<body>
+    <p>hash router</p>
+    <button id="btn1">修改hash</button>
+    <input type="text">
+    <script>
+        window.onload=function(){
+            console.log("初始：",location.pathname)
+        }
+        document.getElementById("btn1").addEventListener("click",function(){
+            const state = {name:"page1"};
+            history.pushState(state,"","page1");
+        })
+        window.onpopstate = (event)=>{
+            console.log("onpopstate:",event.state,location.pathname);
+        }
+    </script>
+</body>
+</html>

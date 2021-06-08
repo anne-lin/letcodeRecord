@@ -10,21 +10,31 @@
  * @return {string}
  */
 var longestPalindrome = function(s) {
-  let dp=[s[0]],maxStr=s[0];
-  for(let i=1;i<s.length;i++){
-    let length=dp[i-1].length;
-    if(length < i && s[i-length-1]==s[i]){
-      dp[i]=s[i]+dp[i-1]+s[i];
-    }else if(Array.from(dp[i-1]).every(item=>item==s[i])){
-      dp[i]=dp[i-1]+s[i];
-    }else if(s[i-1] == s[i]){
-      dp[i]=s[i]+s[i];
-    }else{
-      dp[i]=s[i];
-    }
-    maxStr=maxStr.length > dp[i].length ?maxStr:dp[i];
+  let begin=0,maxLen=1, dp = [];
+  for (let i = 0; i < s.length; i++){
+    dp[i] = [];
+    dp[i][i] = true;
   }
-  return maxStr;
+  for (let L = 2; L <= s.length; L++){
+    for (let i = 0; i < s.length; i++){
+      let j = i + L - 1;
+      if (s[i] != s[j]) {
+        dp[i][j] = false;
+      } else {
+        if (j - i < 3) {
+          dp[i][j] = true;
+        } else {
+          dp[i][j] = dp[i + 1][j - 1];
+        }
+      }
+
+      if (dp[i][j] && L > maxLen) {
+        maxLen = L;
+        begin = i;
+      }
+    }
+  }
+  return s.substring(begin, begin + maxLen);
 };
 // @lc code=end
 

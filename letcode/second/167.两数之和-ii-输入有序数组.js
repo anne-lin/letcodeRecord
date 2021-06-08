@@ -19,7 +19,7 @@ var twoSum = function(numbers, target) {
   /* let cur,end,start,mid;
   for(let i=0;i<numbers.length;i++){
     cur = target-numbers[i];
-    start=i+1;
+    start=i+1; 
     end=numbers.length;
     while(start <= end){
       mid=(start+end) >> 1;

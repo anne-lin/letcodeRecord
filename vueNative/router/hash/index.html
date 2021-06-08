@@ -1,0 +1,31 @@
+/**
+ * vue hash路由跳转使用原理
+ * 主要是用到localhost.hash：hash变化触发网页跳转（浏览器前进后退），不会刷新页面。永远不会提交到server端
+ */
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hash router</title>
+</head>
+<body>
+    <p>hash router</p>
+    <button id="btn1">修改hash</button>
+    <input type="text">
+    <script>
+        window.onhashchange = (event)=>{
+            console.log("old hash:",event.oldURL);
+            console.log("new hash:",event.newURL);
+            console.log("hash:",location.hash);
+        }
+        document.getElementById("btn1").addEventListener("click",function(){
+            location.href = "#/user";
+        })
+        window.onload=function(){
+            console.log("初始hash：",location.hash)
+        }
+    </script>
+</body>
+</html>

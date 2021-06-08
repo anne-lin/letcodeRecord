@@ -1,5 +1,7 @@
 const first = () => (new Promise((resolve, reject) => {
     console.log(3);
+    resolve(2);//
+
     let p = new Promise((resolve, reject) => {
         console.log(7);
         setTimeout(() => {
@@ -8,7 +10,6 @@ const first = () => (new Promise((resolve, reject) => {
         }, 0)
         resolve(1);
     });
-    resolve(2);
     p.then((arg) => {
         console.log(arg);
     });
