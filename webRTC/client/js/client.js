@@ -23,13 +23,12 @@ function initSocket(room){
     if(direction && direction == "call"){
       rtc.saveRemoteSdp(sdp);
     }else{
-      //rtc=new RTC(sdp);
+      rtc=new RTC();
       direction="answer";
       mediaBox.getLocalMediaStream({
         video:true,
         audio:false
-      }).then((steram)=>{
-        rtc=new RTC();
+      }).then((steram)=>{        
         rtc.answer(sdp,steram);
       })
     }
