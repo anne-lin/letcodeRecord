@@ -43,6 +43,8 @@ export class Observer {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
+    //在data中增加一个'__ob__'属性，但是设置此属性是不可枚举的。
+    //接下来对data属性遍历监控（defineProperty）,因为此'__ob__'是不可枚举的所以不会遍历到。因此也不会被监控（没必要监控）
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
       if (hasProto) {
@@ -188,6 +190,7 @@ export function defineReactive (
         val = newVal
       }
       childOb = !shallow && observe(newVal)
+      //派发更新
       dep.notify()
     }
   })

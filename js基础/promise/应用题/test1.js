@@ -9,6 +9,14 @@ function yellow() {
     console.log('yellow');
 }
 
+function lights(timer, cb) {
+    return new Promise((resolve,reject) => {
+        setTimeout(() => {
+            cb();
+            resolve();
+        },timer)
+    })
+}
 let light = function(timer,cb){
     return new Promise((resolve,reject)=>{
         setTimeout(()=>{
@@ -18,12 +26,28 @@ let light = function(timer,cb){
     });
 }
 function step(){
-    light(3000,red).then(()=>{
-        return light(1000,green);
-    }).then(()=>{
-        return light(2000,yellow);
-    }).then(()=>{
-        //step();
+    light(300, red).then(() => {
+        if (step.stop) {
+            throw Error("涨停");
+        }
+        return light(100,green);
+    }).then(() => {
+        if (step.stop) {
+            throw Error("涨停");
+        }
+        return light(200,yellow);
+    }).then(() => {
+        if (step.stop) {
+            throw Error("涨停");
+        }
+        step();
+    }).catch((e) => {
+        console.log("stop")
     })
 }
+step.stop = false;
 step();
+
+setTimeout(() => {
+    step.stop = true;
+},2000)

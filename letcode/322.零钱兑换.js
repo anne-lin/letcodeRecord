@@ -10,6 +10,8 @@
  * @param {number} amount
  * @return {number}
  */
+//[1, 2, 5]
+//11
 var coinChange = function(coins, amount) {
     let dp=[0];
     for(let i=1;i<=amount;i++){

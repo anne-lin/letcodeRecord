@@ -21,6 +21,8 @@ export function initExtend (Vue: GlobalAPI) {
     const Super = this
     const SuperId = Super.cid
     const cachedCtors = extendOptions._Ctor || (extendOptions._Ctor = {})
+
+    //每次实例化后的组件都有一个id,这样做的目的是为了复用组件的时候重复实例化
     if (cachedCtors[SuperId]) {
       return cachedCtors[SuperId]
     }

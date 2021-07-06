@@ -88,6 +88,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
   callbacks.push(() => {
     if (cb) {
+      //避免用户call function逻辑异常不影响下个call fun执行
       try {
         cb.call(ctx)
       } catch (e) {

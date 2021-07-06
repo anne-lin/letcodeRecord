@@ -28,17 +28,29 @@ Promise.allSetter = function (list) {
         return;
     }
     return new Promise((resolve, reject) => {
-        let len = list.length, resArr = [];
+        let len = list.length, resArr = [],count=0;
         for (let i = 0; i < list.length; i++){
             list[i].then((data) => {
                 resArr[i] = data;
             },e => {
                 resArr[i] = e;
             }).finally(() => {
-                if (resArr.length == len) {
+                if (count == len) {
                     resolve(resArr);
                 }
             })
         }
     })
+}
+
+Promise.finally = function (callback) {
+    return this.then((value) => {
+        return Promise.resolve(callback()).then(() => {
+            return value;
+        });
+    }, (err) => {
+        return Promise.resolve(callback()).then(() => {
+            throw err;
+        });
+    });
 }

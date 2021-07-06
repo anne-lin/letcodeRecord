@@ -4,11 +4,7 @@ function deepCopy(src){
     }
     let dest={};
     for (const [key, val] of Object.entries(src)) {
-       if(typeof val !== "object"){
-           dest[key]=val;
-       }else{
-           dest[key]=deepCopy(val);
-       }
+        dest[key]=deepCopy(val);
     }
     return dest;
 }

@@ -128,6 +128,7 @@ export default class Watcher {
    */
   addDep (dep: Dep) {
     const id = dep.id
+    //避免添加已添加过的监控
     if (!this.newDepIds.has(id)) {
       this.newDepIds.add(id)
       this.newDeps.push(dep)
@@ -144,6 +145,7 @@ export default class Watcher {
     let i = this.deps.length
     while (i--) {
       const dep = this.deps[i]
+      //将新的监控和老得监控做比对，删除没必要的不存在的监控（eg:v-if的隐藏显示，隐藏状态所需的监控没必要监控）
       if (!this.newDepIds.has(dep.id)) {
         dep.removeSub(this)
       }
@@ -195,6 +197,7 @@ export default class Watcher {
           const info = `callback for watcher "${this.expression}"`
           invokeWithErrorHandling(this.cb, this.vm, [value, oldValue], this.vm, info)
         } else {
+          //如果是watcher监控，调watcher回调
           this.cb.call(this.vm, value, oldValue)
         }
       }

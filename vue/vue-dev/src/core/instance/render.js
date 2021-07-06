@@ -102,7 +102,7 @@ export function renderMixin (Vue: Class<Component>) {
           vnode = vm._vnode
         }
       } else {
-        vnode = vm._vnode
+        vnode = vm._vnode 
       }
     } finally {
       currentRenderingInstance = null

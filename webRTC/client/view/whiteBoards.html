@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>白板</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .localVideo-box{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-content">
+        <div class="localVideo-box">
+            <div>
+                <canvas width="500" height="300px" id="canvas"></canvas>
+            </div>
+        </div>
+        <div class="remoteVideo-box">
+            <video id="remoteVideo" autoplay playsinline poster="../img/img2.jpg"></video>
+        </div>       
+    </div>
+    <div style="text-align: center;">
+        <button id="sendCanvas">传送画布</button>
+      </div>
+      <script src="../lib/adapter.js" ></script>
+      <script src="../lib/socket.io.js"></script>
+      <script src="../js/event.js"></script>
+      <script src="../js/socket.js"></script>
+      <script src="../js/RTC.js"></script>
+      <script src="../lib/palette.js"></script>
+      <script src="../lib/videoToCanvas.js"></script>
+      <script src="../js/whiteBoards.js"></script>
+</body>
+</html>

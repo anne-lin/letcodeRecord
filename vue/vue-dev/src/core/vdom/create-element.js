@@ -33,6 +33,7 @@ export function createElement (
   normalizationType: any,
   alwaysNormalize: boolean
 ): VNode | Array<VNode> {
+  //参数重载
   if (Array.isArray(data) || isPrimitive(data)) {
     normalizationType = children
     children = data
@@ -122,6 +123,7 @@ export function _createElement (
     }
   } else {
     // direct component options / constructor
+    //vue项目中_createElement传参是vue实例
     vnode = createComponent(tag, data, context, children)
   }
   if (Array.isArray(vnode)) {

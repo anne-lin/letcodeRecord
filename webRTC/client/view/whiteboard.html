@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>white board</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .localVideo-box{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-content">
+        <div class="localVideo-box">
+            <div>
+                <canvas width="500" height="300px" id="canvas"></canvas>
+            </div>
+        </div>
+        <div class="remoteVideo-box">
+            <video id="remoteVideo" autoplay playsinline poster="../img/img2.jpg" controls></video>
+        </div>     
+        <div>
+            <div>
+                <canvas width="500" height="300px" id="canvas2"></canvas>
+            </div>
+        </div>   
+    </div>
+    <div style="text-align: center;">
+        <input type="text" id="roomName">
+        <button id="startButton">进入房间</button>
+        <button id="sendCanvas">传送画布</button>
+        <button id="play">播放</button>
+      </div>
+      <script src="../lib/adapter.js" ></script>
+      <script src="../lib/socket.io.js"></script>
+      <script src="../lib/palette.js"></script>
+      <script src="../lib/videoToCanvas.js"></script>
+      <script src="../js/whiteBoard.js"></script>
+</body>
+</html>

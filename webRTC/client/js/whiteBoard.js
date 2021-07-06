@@ -1,3 +1,4 @@
+
 var socket;
 
 function initSocket(room){
@@ -26,13 +27,10 @@ function initSocket(room){
     }else{
       //rtc=new RTC(sdp);
       rtc=new RTC();
-      direction="answer";
-      mediaBox.getLocalMediaStream({
-        video:true,
-        audio:false
-      }).then((steram)=>{
-        rtc.answer(sdp,steram);
-      })
+      direction = "answer";
+      let steram=mediaBox.getWhiteBoardStream("canvas")
+      rtc.answer(sdp, steram);
+      initPalette();
     }
   });
   socket.on('candidate', (candidate) => { 
@@ -61,8 +59,9 @@ class RTC{
       }]
     });
     this.remoteStream;
+    this.localStream = "";
     this.peerConnection.onaddstream = function(event){
-      remoteVideo.srcObject=event.stream;
+      mediaBox.handleRemoteStream(event.stream);
       this.remoteStream=event.stream;
     };
     this.peerConnection.onicecandidate = function(event) {
@@ -89,7 +88,8 @@ class RTC{
       socket.emit("sdp",this.peerConnection.localDescription);
     },this.onError);
   }  
-  call(mediaStream){
+  call(mediaStream) {
+    this.localStream = mediaStream;
     this.peerConnection.addStream(mediaStream);
     this.peerConnection.createOffer()
     .then((sdp)=>{
@@ -97,11 +97,11 @@ class RTC{
     })
     .catch(this.onError);
   }
-  answer(sdp,mediaStream){
+  answer(sdp,stream){
     if(!sdp){
       return;
     }
-    this.peerConnection.addStream(mediaStream);
+    this.peerConnection.addStream(stream);
     this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdp), ()=>{
       this.peerConnection.createAnswer()
         .then((sdp) => {
@@ -113,7 +113,7 @@ class RTC{
   saveRemoteSdp(sdp){
     this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdp), function(){
       console.log("save remote sdp success");
-      setBindWidth(1000);
+      //setBindWidth(1000);
     },this.onError);
   }
   hangup=()=>{
@@ -145,6 +145,14 @@ function handleMedia(){
       })
     });
   }
+  this.getWhiteBoardStream = function (el) {
+    this.localStream = document.getElementById(el).captureStream();
+    return this.localStream;
+  }
+  this.handleRemoteStream = function (stream) {
+    remoteVideo.srcObject = stream;
+    //VideoToCanvasTmp(remoteVideo,canvas2);
+  }
   this.stopMedia=function(){
     if(this.localStream.active){
       var tracks = this.localStream.getTracks();
@@ -156,63 +164,39 @@ function handleMedia(){
   }
 }
 
-const localVideo = document.getElementById('localVideo');
+const localVideo = document.getElementById('canvas');
 const remoteVideo = document.getElementById('remoteVideo');
 const startButton = document.getElementById('startButton');
-const callButton = document.getElementById('callButton');
-const hangupButton = document.getElementById('hangupButton');
+const sendCanvas = document.getElementById('sendCanvas');
 const roomName = document.getElementById('roomName');
-const bindWidthChange = document.getElementById('bindWidthChange');
-let rtc, direction, mediaBox;
+const canvas = document.getElementById('canvas');
+const canvas2 = document.getElementById('canvas2');
+const play = document.getElementById('play');
+
+let palette, rtc, direction, mediaBox,videoTCanvas;
 
 mediaBox =new handleMedia();
-startButton.onclick = function(){
-  if(roomName.value){
-    initSocket(roomName.value);
-  }
-}
+initSocket("123");
 
-callButton.onclick = function(){
-  direction="call";
-  mediaBox.getLocalMediaStream({
-    video:true,
-    audio:false
-  }).then((steram)=>{
-    rtc=new RTC();
-    rtc.call(steram);
-  })
-  this.disabled = false;
+play.onclick = function () {
+  videoTCanvas.play();
+}
+sendCanvas.onclick = function(){
+  direction = "call";
+  let steram = mediaBox.getWhiteBoardStream("canvas");
+  rtc=new RTC();
+  rtc.call(steram);
+  initPalette();
+  //this.disabled = false;
 };
-hangupButton.onclick = function(){
-  mediaBox.stopMedia();
-  rtc.hangup();
-  socket.emit("hangup");
-}
 
-function setBindWidth(bindWidth) {
-  let vsender = null,
-  senders = rtc.peerConnection.getSenders();
-  console.log("senders:",senders);
-  senders.forEach(sender => {
-    if (sender && sender.track.kind === "video") {
-      vsender = sender;
+function initPalette() {
+  palette=new Palette(document.getElementById('canvas'), {
+    drawColor: 'rgba(19, 206, 102, 1)',
+    drawType: 'line',
+    lineWidth: 5,
+    allowCallback: function (cancel, go) {
+      console.log(cancel, go);
     }
-  });
-  
-  console.log("vsender:",vsender);
-  let parameters = vsender.getParameters();
-  if (!parameters.encodings) {
-    return;
-  }
-  console.log("parameters:",parameters);
-
-  parameters.encodings[0].maxBitrate = bindWidth * 1000;
-
-  vsender.setParameters(parameters).then(() => {
-    console.log("设置字节成功")
-  })
-}
-//控制视频流字节大小
-bindWidthChange.onclick = function () {
-  setBindWidth(500);
+});
 }
